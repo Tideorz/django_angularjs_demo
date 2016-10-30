@@ -1,0 +1,50 @@
+#!/bin/sh
+rerun="YES"
+requirements="--requirement requirements.pip"
+pip_upgrade_option=""
+if [ $# -gt 0 ]; then
+    while getopts "um:" optname
+    do
+        case $optname in
+            u)  
+                pip_upgrade_option="--upgrade"
+                ;;  
+        esac
+    done
+fi
+
+#PKG_SOURCE_URL='https://pypi.python.org/pypi'
+#pip_cmd="pip install $pip_upgrade_option --index-url http://nfs-server/python --find-links http://nfs-server/python $requirements"
+pip_cmd="pip install $pip_upgrade_option --extra-index-url ${PKG_SOURCE_URL} --find-links ${PKG_SOURCE_URL} $requirements"
+
+if [ ! -d "environ" ]; then
+    virtualenv --system-site-packages --no-pip environ || (echo "Exiting; virtualenv failed" && exit 1)  
+    rerun=
+fi
+
+
+ln -sf environ/bin/activate
+
+. ./activate
+
+#[ -z "${rerun}" ] && (easy_install -q http://nfs-server/python/pip-1.6-jython.tar.gz )
+
+PIPVERSION=`pip --version | cut -d' ' -f2`
+pip_status=$?
+if test $pip_status -ne 0
+then
+	wget https://bootstrap.pypa.io/get-pip.py
+	python get-pip.py
+	rm get-pip.py
+fi
+
+$pip_cmd
+status=$?
+
+if test $status -eq 0
+then
+    echo "Run 'source activate' to activate the virtual environment, and 'deactivate' to switch back to the system ."
+else
+    echo "PIP failed to install all packages."
+    exit $status
+fi
