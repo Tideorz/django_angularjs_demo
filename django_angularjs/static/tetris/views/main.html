@@ -1,0 +1,8 @@
+<div id='content' ng-controller='GameController as ctrl'>
+	<div id="game-container">
+	<!--grid directive will help to create a grid with the size  
+		after call GridServiceProvider.set_grid_height_width(N,M) 
+	in app.js-->
+		<div grid-directive ng-model='ctrl.game' class='row'></div>
+	</div>
+</div>

@@ -1,0 +1,18 @@
+{% load staticfiles %}
+<html> 
+  <head> 
+    <title>Tetris</title> 
+	<!-- script tags --> 
+	<script type='text/javascript' src="{% static 'tetris/vendor/node_modules/angular/angular.min.js' %}"></script> 
+	<script type='text/javascript' src="{% static 'tetris/scripts/app.js' %}"></script> 
+	<script type='text/javascript' src="{% static 'tetris/scripts/game/game.js' %}"></script> 
+	<script type='text/javascript' src="{% static 'tetris/scripts/grid/grid.js' %}"></script> 
+	<script type='text/javascript' src="{% static 'tetris/scripts/grid/grid_directive.js' %}"></script> 
+	<script type='text/javascript' src="{% static 'tetris/css/main.css' %}"></script> 
+  </head> 
+  <body ng-app="tetrisApp">
+    <!-- header --> 
+	<span>hello angularJS</span>
+	<div class="container" ng-include="'{% static "tetris/views/main.html" %}'"></div> 
+  </body> 
+</html> 

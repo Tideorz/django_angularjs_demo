@@ -1,0 +1,63 @@
+//gird width
+$width: 400px;
+$height_factor: 1.5;
+$game-container-background: #bbada0;
+$text-color: #776E65;
+$tile-padding: 15px;
+
+.container {
+  max-width: 600px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+
+  background: #faf8ef;
+  color: $text-color;
+  font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+}
+
+#game-container {
+   position: relative;
+   width: $width;
+   height: $width * $height_factor;
+   margin: 40px auto;
+}
+
+// game grid constructor
+// set the default grid contains 10 tiles in a single row
+@mixin game-board($tile-count: 10) {
+	$tile-size: $width / $tile-count;
+	#game-grid-#{$tile-count} {
+		position: relative;
+		cursor: default;
+    	background: #bbaaa0;
+    	border-radius: 6px;
+    	width: $width;
+    	height_radiust: $width * $height_factor;
+		-webkit-box-sizing: border-box;
+    	-moz-box-sizing: border-box;
+    	box-sizing: border-box;
+		
+		.grid-container {
+			position: absolute;
+      		z-index: 1;
+      		margin: 0 auto;
+			
+			.grid-cell {
+				width: $tile-size;	
+				height: $tile-size;
+				margin-bottom: $tile-padding;
+        		margin-right: $tile-padding;
+        		float: left;
+				background: rgba(238, 228, 218, 0.35);	
+			}
+		}
+	}
+
+}
+
+@include game-board();
+

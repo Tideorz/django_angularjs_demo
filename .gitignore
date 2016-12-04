@@ -2,3 +2,5 @@
 db.sqlite3
 environ/
 activate
+django_angularjs/static/tetris/vendor/
+*.scssc
