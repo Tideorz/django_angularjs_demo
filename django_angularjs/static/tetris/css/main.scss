@@ -1,12 +1,17 @@
+@import "_functions";
+
+
 //gird width
-$width: 400px;
+$width: 300px;
 $height_factor: 1.5;
 $game-container-background: #bbada0;
 $text-color: #776E65;
-$tile-padding: 15px;
+$tile-padding: 1px;
 
 .container {
-  max-width: 600px;
+  max-width: 500px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 html, body {
@@ -29,17 +34,18 @@ html, body {
 // game grid constructor
 // set the default grid contains 10 tiles in a single row
 @mixin game-board($tile-count: 10) {
-	$tile-size: $width / $tile-count;
+	$tile-size: ($width - ($tile-count + 1) * $tile-padding)/ $tile-count;
 	#game-grid-#{$tile-count} {
 		position: relative;
 		cursor: default;
     	background: #bbaaa0;
-    	border-radius: 6px;
+    	border-radius: 0px;
     	width: $width;
-    	height_radiust: $width * $height_factor;
+    	height: $width * $height_factor;
 		-webkit-box-sizing: border-box;
     	-moz-box-sizing: border-box;
     	box-sizing: border-box;
+		padding: $tile-padding;
 		
 		.grid-container {
 			position: absolute;
@@ -53,6 +59,50 @@ html, body {
         		margin-right: $tile-padding;
         		float: left;
 				background: rgba(238, 228, 218, 0.35);	
+			}
+		}
+
+		.tile-container {
+			position: absolute;		
+			width: $tile-size;
+			height: $tile-size;
+			z-index: 2;
+			// transition 
+			// pass
+
+			
+
+			.tile {
+				position: absolute;
+				width: $tile-size;
+				height: $tile-size;
+				-webkit-transition-property: -webkit-transform;
+        		-moz-transition-property: -moz-transform;
+        		transition-property: transform;
+        		z-index: 2;
+
+				@for $x from 1 through $tile-count {
+					@for $y	 from 1 through ($tile-count * $height_factor) {
+						$zeroOffsetX: $x - 1;	
+						$zeroOffsetY: $y - 1;	
+						$newX: $tile-size * $zeroOffsetX + $tile-padding * $zeroOffsetX;
+						$newY: $tile-size * $zeroOffsetY + $tile-padding * $zeroOffsetY;
+						
+						&.position-#{$zeroOffsetX}-#{$zeroOffsetY} {
+							@include transform(translate($newX, $newY));													
+						}
+					}
+				}
+				.tile-inner {
+					width: $tile-size;
+					height: $tile-size;
+					background: #B60022;
+					line-height: ($width/$tile-count) - $tile-padding;
+          			text-align: center;
+          			font-weight: bold;
+          			z-index: 10;
+          			font-size: 2.5em;
+				}
 			}
 		}
 	}

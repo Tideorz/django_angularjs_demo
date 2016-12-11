@@ -2,7 +2,7 @@
 var ngModule = angular.module('tetrisApp', ['Game', 'Grid',]).
 config(function(GridServiceProvider) {
 	// Grid Size init
-	GridServiceProvider.set_grid_height_width(30,15);
+	GridServiceProvider.set_grid_height_width(15,10);
 })
 .controller('GameController', function(GameManagerService) {
 	this.game = GameManagerService;

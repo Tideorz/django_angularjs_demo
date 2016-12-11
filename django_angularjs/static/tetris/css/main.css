@@ -1,5 +1,7 @@
 .container {
-  max-width: 600px; }
+  max-width: 500px;
+  margin-right: auto;
+  margin-left: auto; }
 
 html, body {
   margin: 0;
@@ -11,28 +13,801 @@ html, body {
 
 #game-container {
   position: relative;
-  width: 400px;
-  height: 600px;
+  width: 300px;
+  height: 450px;
   margin: 40px auto; }
 
 #game-grid-10 {
   position: relative;
   cursor: default;
   background: #bbaaa0;
-  border-radius: 6px;
-  width: 400px;
-  height_radiust: 600px;
+  border-radius: 0px;
+  width: 300px;
+  height: 450px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  padding: 1px; }
   #game-grid-10 .grid-container {
     position: absolute;
     z-index: 1;
     margin: 0 auto; }
     #game-grid-10 .grid-container .grid-cell {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 15px;
-      margin-right: 15px;
+      width: 28.9px;
+      height: 28.9px;
+      margin-bottom: 1px;
+      margin-right: 1px;
       float: left;
       background: rgba(238, 228, 218, 0.35); }
+  #game-grid-10 .tile-container {
+    position: absolute;
+    width: 28.9px;
+    height: 28.9px;
+    z-index: 2; }
+    #game-grid-10 .tile-container .tile {
+      position: absolute;
+      width: 28.9px;
+      height: 28.9px;
+      -webkit-transition-property: -webkit-transform;
+      -moz-transition-property: -moz-transform;
+      transition-property: transform;
+      z-index: 2; }
+      #game-grid-10 .tile-container .tile.position-0-0 {
+        -webkit-transform: translate(0px, 0px);
+        -moz-transform: translate(0px, 0px);
+        -o-transform: translate(0px, 0px);
+        transform: translate(0px, 0px); }
+      #game-grid-10 .tile-container .tile.position-0-1 {
+        -webkit-transform: translate(0px, 29.9px);
+        -moz-transform: translate(0px, 29.9px);
+        -o-transform: translate(0px, 29.9px);
+        transform: translate(0px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-0-2 {
+        -webkit-transform: translate(0px, 59.8px);
+        -moz-transform: translate(0px, 59.8px);
+        -o-transform: translate(0px, 59.8px);
+        transform: translate(0px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-0-3 {
+        -webkit-transform: translate(0px, 89.7px);
+        -moz-transform: translate(0px, 89.7px);
+        -o-transform: translate(0px, 89.7px);
+        transform: translate(0px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-0-4 {
+        -webkit-transform: translate(0px, 119.6px);
+        -moz-transform: translate(0px, 119.6px);
+        -o-transform: translate(0px, 119.6px);
+        transform: translate(0px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-0-5 {
+        -webkit-transform: translate(0px, 149.5px);
+        -moz-transform: translate(0px, 149.5px);
+        -o-transform: translate(0px, 149.5px);
+        transform: translate(0px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-0-6 {
+        -webkit-transform: translate(0px, 179.4px);
+        -moz-transform: translate(0px, 179.4px);
+        -o-transform: translate(0px, 179.4px);
+        transform: translate(0px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-0-7 {
+        -webkit-transform: translate(0px, 209.3px);
+        -moz-transform: translate(0px, 209.3px);
+        -o-transform: translate(0px, 209.3px);
+        transform: translate(0px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-0-8 {
+        -webkit-transform: translate(0px, 239.2px);
+        -moz-transform: translate(0px, 239.2px);
+        -o-transform: translate(0px, 239.2px);
+        transform: translate(0px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-0-9 {
+        -webkit-transform: translate(0px, 269.1px);
+        -moz-transform: translate(0px, 269.1px);
+        -o-transform: translate(0px, 269.1px);
+        transform: translate(0px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-0-10 {
+        -webkit-transform: translate(0px, 299px);
+        -moz-transform: translate(0px, 299px);
+        -o-transform: translate(0px, 299px);
+        transform: translate(0px, 299px); }
+      #game-grid-10 .tile-container .tile.position-0-11 {
+        -webkit-transform: translate(0px, 328.9px);
+        -moz-transform: translate(0px, 328.9px);
+        -o-transform: translate(0px, 328.9px);
+        transform: translate(0px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-0-12 {
+        -webkit-transform: translate(0px, 358.8px);
+        -moz-transform: translate(0px, 358.8px);
+        -o-transform: translate(0px, 358.8px);
+        transform: translate(0px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-0-13 {
+        -webkit-transform: translate(0px, 388.7px);
+        -moz-transform: translate(0px, 388.7px);
+        -o-transform: translate(0px, 388.7px);
+        transform: translate(0px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-0-14 {
+        -webkit-transform: translate(0px, 418.6px);
+        -moz-transform: translate(0px, 418.6px);
+        -o-transform: translate(0px, 418.6px);
+        transform: translate(0px, 418.6px); }
+      #game-grid-10 .tile-container .tile.position-1-0 {
+        -webkit-transform: translate(29.9px, 0px);
+        -moz-transform: translate(29.9px, 0px);
+        -o-transform: translate(29.9px, 0px);
+        transform: translate(29.9px, 0px); }
+      #game-grid-10 .tile-container .tile.position-1-1 {
+        -webkit-transform: translate(29.9px, 29.9px);
+        -moz-transform: translate(29.9px, 29.9px);
+        -o-transform: translate(29.9px, 29.9px);
+        transform: translate(29.9px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-1-2 {
+        -webkit-transform: translate(29.9px, 59.8px);
+        -moz-transform: translate(29.9px, 59.8px);
+        -o-transform: translate(29.9px, 59.8px);
+        transform: translate(29.9px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-1-3 {
+        -webkit-transform: translate(29.9px, 89.7px);
+        -moz-transform: translate(29.9px, 89.7px);
+        -o-transform: translate(29.9px, 89.7px);
+        transform: translate(29.9px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-1-4 {
+        -webkit-transform: translate(29.9px, 119.6px);
+        -moz-transform: translate(29.9px, 119.6px);
+        -o-transform: translate(29.9px, 119.6px);
+        transform: translate(29.9px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-1-5 {
+        -webkit-transform: translate(29.9px, 149.5px);
+        -moz-transform: translate(29.9px, 149.5px);
+        -o-transform: translate(29.9px, 149.5px);
+        transform: translate(29.9px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-1-6 {
+        -webkit-transform: translate(29.9px, 179.4px);
+        -moz-transform: translate(29.9px, 179.4px);
+        -o-transform: translate(29.9px, 179.4px);
+        transform: translate(29.9px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-1-7 {
+        -webkit-transform: translate(29.9px, 209.3px);
+        -moz-transform: translate(29.9px, 209.3px);
+        -o-transform: translate(29.9px, 209.3px);
+        transform: translate(29.9px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-1-8 {
+        -webkit-transform: translate(29.9px, 239.2px);
+        -moz-transform: translate(29.9px, 239.2px);
+        -o-transform: translate(29.9px, 239.2px);
+        transform: translate(29.9px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-1-9 {
+        -webkit-transform: translate(29.9px, 269.1px);
+        -moz-transform: translate(29.9px, 269.1px);
+        -o-transform: translate(29.9px, 269.1px);
+        transform: translate(29.9px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-1-10 {
+        -webkit-transform: translate(29.9px, 299px);
+        -moz-transform: translate(29.9px, 299px);
+        -o-transform: translate(29.9px, 299px);
+        transform: translate(29.9px, 299px); }
+      #game-grid-10 .tile-container .tile.position-1-11 {
+        -webkit-transform: translate(29.9px, 328.9px);
+        -moz-transform: translate(29.9px, 328.9px);
+        -o-transform: translate(29.9px, 328.9px);
+        transform: translate(29.9px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-1-12 {
+        -webkit-transform: translate(29.9px, 358.8px);
+        -moz-transform: translate(29.9px, 358.8px);
+        -o-transform: translate(29.9px, 358.8px);
+        transform: translate(29.9px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-1-13 {
+        -webkit-transform: translate(29.9px, 388.7px);
+        -moz-transform: translate(29.9px, 388.7px);
+        -o-transform: translate(29.9px, 388.7px);
+        transform: translate(29.9px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-1-14 {
+        -webkit-transform: translate(29.9px, 418.6px);
+        -moz-transform: translate(29.9px, 418.6px);
+        -o-transform: translate(29.9px, 418.6px);
+        transform: translate(29.9px, 418.6px); }
+      #game-grid-10 .tile-container .tile.position-2-0 {
+        -webkit-transform: translate(59.8px, 0px);
+        -moz-transform: translate(59.8px, 0px);
+        -o-transform: translate(59.8px, 0px);
+        transform: translate(59.8px, 0px); }
+      #game-grid-10 .tile-container .tile.position-2-1 {
+        -webkit-transform: translate(59.8px, 29.9px);
+        -moz-transform: translate(59.8px, 29.9px);
+        -o-transform: translate(59.8px, 29.9px);
+        transform: translate(59.8px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-2-2 {
+        -webkit-transform: translate(59.8px, 59.8px);
+        -moz-transform: translate(59.8px, 59.8px);
+        -o-transform: translate(59.8px, 59.8px);
+        transform: translate(59.8px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-2-3 {
+        -webkit-transform: translate(59.8px, 89.7px);
+        -moz-transform: translate(59.8px, 89.7px);
+        -o-transform: translate(59.8px, 89.7px);
+        transform: translate(59.8px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-2-4 {
+        -webkit-transform: translate(59.8px, 119.6px);
+        -moz-transform: translate(59.8px, 119.6px);
+        -o-transform: translate(59.8px, 119.6px);
+        transform: translate(59.8px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-2-5 {
+        -webkit-transform: translate(59.8px, 149.5px);
+        -moz-transform: translate(59.8px, 149.5px);
+        -o-transform: translate(59.8px, 149.5px);
+        transform: translate(59.8px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-2-6 {
+        -webkit-transform: translate(59.8px, 179.4px);
+        -moz-transform: translate(59.8px, 179.4px);
+        -o-transform: translate(59.8px, 179.4px);
+        transform: translate(59.8px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-2-7 {
+        -webkit-transform: translate(59.8px, 209.3px);
+        -moz-transform: translate(59.8px, 209.3px);
+        -o-transform: translate(59.8px, 209.3px);
+        transform: translate(59.8px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-2-8 {
+        -webkit-transform: translate(59.8px, 239.2px);
+        -moz-transform: translate(59.8px, 239.2px);
+        -o-transform: translate(59.8px, 239.2px);
+        transform: translate(59.8px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-2-9 {
+        -webkit-transform: translate(59.8px, 269.1px);
+        -moz-transform: translate(59.8px, 269.1px);
+        -o-transform: translate(59.8px, 269.1px);
+        transform: translate(59.8px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-2-10 {
+        -webkit-transform: translate(59.8px, 299px);
+        -moz-transform: translate(59.8px, 299px);
+        -o-transform: translate(59.8px, 299px);
+        transform: translate(59.8px, 299px); }
+      #game-grid-10 .tile-container .tile.position-2-11 {
+        -webkit-transform: translate(59.8px, 328.9px);
+        -moz-transform: translate(59.8px, 328.9px);
+        -o-transform: translate(59.8px, 328.9px);
+        transform: translate(59.8px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-2-12 {
+        -webkit-transform: translate(59.8px, 358.8px);
+        -moz-transform: translate(59.8px, 358.8px);
+        -o-transform: translate(59.8px, 358.8px);
+        transform: translate(59.8px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-2-13 {
+        -webkit-transform: translate(59.8px, 388.7px);
+        -moz-transform: translate(59.8px, 388.7px);
+        -o-transform: translate(59.8px, 388.7px);
+        transform: translate(59.8px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-2-14 {
+        -webkit-transform: translate(59.8px, 418.6px);
+        -moz-transform: translate(59.8px, 418.6px);
+        -o-transform: translate(59.8px, 418.6px);
+        transform: translate(59.8px, 418.6px); }
+      #game-grid-10 .tile-container .tile.position-3-0 {
+        -webkit-transform: translate(89.7px, 0px);
+        -moz-transform: translate(89.7px, 0px);
+        -o-transform: translate(89.7px, 0px);
+        transform: translate(89.7px, 0px); }
+      #game-grid-10 .tile-container .tile.position-3-1 {
+        -webkit-transform: translate(89.7px, 29.9px);
+        -moz-transform: translate(89.7px, 29.9px);
+        -o-transform: translate(89.7px, 29.9px);
+        transform: translate(89.7px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-3-2 {
+        -webkit-transform: translate(89.7px, 59.8px);
+        -moz-transform: translate(89.7px, 59.8px);
+        -o-transform: translate(89.7px, 59.8px);
+        transform: translate(89.7px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-3-3 {
+        -webkit-transform: translate(89.7px, 89.7px);
+        -moz-transform: translate(89.7px, 89.7px);
+        -o-transform: translate(89.7px, 89.7px);
+        transform: translate(89.7px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-3-4 {
+        -webkit-transform: translate(89.7px, 119.6px);
+        -moz-transform: translate(89.7px, 119.6px);
+        -o-transform: translate(89.7px, 119.6px);
+        transform: translate(89.7px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-3-5 {
+        -webkit-transform: translate(89.7px, 149.5px);
+        -moz-transform: translate(89.7px, 149.5px);
+        -o-transform: translate(89.7px, 149.5px);
+        transform: translate(89.7px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-3-6 {
+        -webkit-transform: translate(89.7px, 179.4px);
+        -moz-transform: translate(89.7px, 179.4px);
+        -o-transform: translate(89.7px, 179.4px);
+        transform: translate(89.7px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-3-7 {
+        -webkit-transform: translate(89.7px, 209.3px);
+        -moz-transform: translate(89.7px, 209.3px);
+        -o-transform: translate(89.7px, 209.3px);
+        transform: translate(89.7px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-3-8 {
+        -webkit-transform: translate(89.7px, 239.2px);
+        -moz-transform: translate(89.7px, 239.2px);
+        -o-transform: translate(89.7px, 239.2px);
+        transform: translate(89.7px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-3-9 {
+        -webkit-transform: translate(89.7px, 269.1px);
+        -moz-transform: translate(89.7px, 269.1px);
+        -o-transform: translate(89.7px, 269.1px);
+        transform: translate(89.7px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-3-10 {
+        -webkit-transform: translate(89.7px, 299px);
+        -moz-transform: translate(89.7px, 299px);
+        -o-transform: translate(89.7px, 299px);
+        transform: translate(89.7px, 299px); }
+      #game-grid-10 .tile-container .tile.position-3-11 {
+        -webkit-transform: translate(89.7px, 328.9px);
+        -moz-transform: translate(89.7px, 328.9px);
+        -o-transform: translate(89.7px, 328.9px);
+        transform: translate(89.7px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-3-12 {
+        -webkit-transform: translate(89.7px, 358.8px);
+        -moz-transform: translate(89.7px, 358.8px);
+        -o-transform: translate(89.7px, 358.8px);
+        transform: translate(89.7px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-3-13 {
+        -webkit-transform: translate(89.7px, 388.7px);
+        -moz-transform: translate(89.7px, 388.7px);
+        -o-transform: translate(89.7px, 388.7px);
+        transform: translate(89.7px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-3-14 {
+        -webkit-transform: translate(89.7px, 418.6px);
+        -moz-transform: translate(89.7px, 418.6px);
+        -o-transform: translate(89.7px, 418.6px);
+        transform: translate(89.7px, 418.6px); }
+      #game-grid-10 .tile-container .tile.position-4-0 {
+        -webkit-transform: translate(119.6px, 0px);
+        -moz-transform: translate(119.6px, 0px);
+        -o-transform: translate(119.6px, 0px);
+        transform: translate(119.6px, 0px); }
+      #game-grid-10 .tile-container .tile.position-4-1 {
+        -webkit-transform: translate(119.6px, 29.9px);
+        -moz-transform: translate(119.6px, 29.9px);
+        -o-transform: translate(119.6px, 29.9px);
+        transform: translate(119.6px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-4-2 {
+        -webkit-transform: translate(119.6px, 59.8px);
+        -moz-transform: translate(119.6px, 59.8px);
+        -o-transform: translate(119.6px, 59.8px);
+        transform: translate(119.6px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-4-3 {
+        -webkit-transform: translate(119.6px, 89.7px);
+        -moz-transform: translate(119.6px, 89.7px);
+        -o-transform: translate(119.6px, 89.7px);
+        transform: translate(119.6px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-4-4 {
+        -webkit-transform: translate(119.6px, 119.6px);
+        -moz-transform: translate(119.6px, 119.6px);
+        -o-transform: translate(119.6px, 119.6px);
+        transform: translate(119.6px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-4-5 {
+        -webkit-transform: translate(119.6px, 149.5px);
+        -moz-transform: translate(119.6px, 149.5px);
+        -o-transform: translate(119.6px, 149.5px);
+        transform: translate(119.6px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-4-6 {
+        -webkit-transform: translate(119.6px, 179.4px);
+        -moz-transform: translate(119.6px, 179.4px);
+        -o-transform: translate(119.6px, 179.4px);
+        transform: translate(119.6px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-4-7 {
+        -webkit-transform: translate(119.6px, 209.3px);
+        -moz-transform: translate(119.6px, 209.3px);
+        -o-transform: translate(119.6px, 209.3px);
+        transform: translate(119.6px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-4-8 {
+        -webkit-transform: translate(119.6px, 239.2px);
+        -moz-transform: translate(119.6px, 239.2px);
+        -o-transform: translate(119.6px, 239.2px);
+        transform: translate(119.6px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-4-9 {
+        -webkit-transform: translate(119.6px, 269.1px);
+        -moz-transform: translate(119.6px, 269.1px);
+        -o-transform: translate(119.6px, 269.1px);
+        transform: translate(119.6px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-4-10 {
+        -webkit-transform: translate(119.6px, 299px);
+        -moz-transform: translate(119.6px, 299px);
+        -o-transform: translate(119.6px, 299px);
+        transform: translate(119.6px, 299px); }
+      #game-grid-10 .tile-container .tile.position-4-11 {
+        -webkit-transform: translate(119.6px, 328.9px);
+        -moz-transform: translate(119.6px, 328.9px);
+        -o-transform: translate(119.6px, 328.9px);
+        transform: translate(119.6px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-4-12 {
+        -webkit-transform: translate(119.6px, 358.8px);
+        -moz-transform: translate(119.6px, 358.8px);
+        -o-transform: translate(119.6px, 358.8px);
+        transform: translate(119.6px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-4-13 {
+        -webkit-transform: translate(119.6px, 388.7px);
+        -moz-transform: translate(119.6px, 388.7px);
+        -o-transform: translate(119.6px, 388.7px);
+        transform: translate(119.6px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-4-14 {
+        -webkit-transform: translate(119.6px, 418.6px);
+        -moz-transform: translate(119.6px, 418.6px);
+        -o-transform: translate(119.6px, 418.6px);
+        transform: translate(119.6px, 418.6px); }
+      #game-grid-10 .tile-container .tile.position-5-0 {
+        -webkit-transform: translate(149.5px, 0px);
+        -moz-transform: translate(149.5px, 0px);
+        -o-transform: translate(149.5px, 0px);
+        transform: translate(149.5px, 0px); }
+      #game-grid-10 .tile-container .tile.position-5-1 {
+        -webkit-transform: translate(149.5px, 29.9px);
+        -moz-transform: translate(149.5px, 29.9px);
+        -o-transform: translate(149.5px, 29.9px);
+        transform: translate(149.5px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-5-2 {
+        -webkit-transform: translate(149.5px, 59.8px);
+        -moz-transform: translate(149.5px, 59.8px);
+        -o-transform: translate(149.5px, 59.8px);
+        transform: translate(149.5px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-5-3 {
+        -webkit-transform: translate(149.5px, 89.7px);
+        -moz-transform: translate(149.5px, 89.7px);
+        -o-transform: translate(149.5px, 89.7px);
+        transform: translate(149.5px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-5-4 {
+        -webkit-transform: translate(149.5px, 119.6px);
+        -moz-transform: translate(149.5px, 119.6px);
+        -o-transform: translate(149.5px, 119.6px);
+        transform: translate(149.5px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-5-5 {
+        -webkit-transform: translate(149.5px, 149.5px);
+        -moz-transform: translate(149.5px, 149.5px);
+        -o-transform: translate(149.5px, 149.5px);
+        transform: translate(149.5px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-5-6 {
+        -webkit-transform: translate(149.5px, 179.4px);
+        -moz-transform: translate(149.5px, 179.4px);
+        -o-transform: translate(149.5px, 179.4px);
+        transform: translate(149.5px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-5-7 {
+        -webkit-transform: translate(149.5px, 209.3px);
+        -moz-transform: translate(149.5px, 209.3px);
+        -o-transform: translate(149.5px, 209.3px);
+        transform: translate(149.5px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-5-8 {
+        -webkit-transform: translate(149.5px, 239.2px);
+        -moz-transform: translate(149.5px, 239.2px);
+        -o-transform: translate(149.5px, 239.2px);
+        transform: translate(149.5px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-5-9 {
+        -webkit-transform: translate(149.5px, 269.1px);
+        -moz-transform: translate(149.5px, 269.1px);
+        -o-transform: translate(149.5px, 269.1px);
+        transform: translate(149.5px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-5-10 {
+        -webkit-transform: translate(149.5px, 299px);
+        -moz-transform: translate(149.5px, 299px);
+        -o-transform: translate(149.5px, 299px);
+        transform: translate(149.5px, 299px); }
+      #game-grid-10 .tile-container .tile.position-5-11 {
+        -webkit-transform: translate(149.5px, 328.9px);
+        -moz-transform: translate(149.5px, 328.9px);
+        -o-transform: translate(149.5px, 328.9px);
+        transform: translate(149.5px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-5-12 {
+        -webkit-transform: translate(149.5px, 358.8px);
+        -moz-transform: translate(149.5px, 358.8px);
+        -o-transform: translate(149.5px, 358.8px);
+        transform: translate(149.5px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-5-13 {
+        -webkit-transform: translate(149.5px, 388.7px);
+        -moz-transform: translate(149.5px, 388.7px);
+        -o-transform: translate(149.5px, 388.7px);
+        transform: translate(149.5px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-5-14 {
+        -webkit-transform: translate(149.5px, 418.6px);
+        -moz-transform: translate(149.5px, 418.6px);
+        -o-transform: translate(149.5px, 418.6px);
+        transform: translate(149.5px, 418.6px); }
+      #game-grid-10 .tile-container .tile.position-6-0 {
+        -webkit-transform: translate(179.4px, 0px);
+        -moz-transform: translate(179.4px, 0px);
+        -o-transform: translate(179.4px, 0px);
+        transform: translate(179.4px, 0px); }
+      #game-grid-10 .tile-container .tile.position-6-1 {
+        -webkit-transform: translate(179.4px, 29.9px);
+        -moz-transform: translate(179.4px, 29.9px);
+        -o-transform: translate(179.4px, 29.9px);
+        transform: translate(179.4px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-6-2 {
+        -webkit-transform: translate(179.4px, 59.8px);
+        -moz-transform: translate(179.4px, 59.8px);
+        -o-transform: translate(179.4px, 59.8px);
+        transform: translate(179.4px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-6-3 {
+        -webkit-transform: translate(179.4px, 89.7px);
+        -moz-transform: translate(179.4px, 89.7px);
+        -o-transform: translate(179.4px, 89.7px);
+        transform: translate(179.4px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-6-4 {
+        -webkit-transform: translate(179.4px, 119.6px);
+        -moz-transform: translate(179.4px, 119.6px);
+        -o-transform: translate(179.4px, 119.6px);
+        transform: translate(179.4px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-6-5 {
+        -webkit-transform: translate(179.4px, 149.5px);
+        -moz-transform: translate(179.4px, 149.5px);
+        -o-transform: translate(179.4px, 149.5px);
+        transform: translate(179.4px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-6-6 {
+        -webkit-transform: translate(179.4px, 179.4px);
+        -moz-transform: translate(179.4px, 179.4px);
+        -o-transform: translate(179.4px, 179.4px);
+        transform: translate(179.4px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-6-7 {
+        -webkit-transform: translate(179.4px, 209.3px);
+        -moz-transform: translate(179.4px, 209.3px);
+        -o-transform: translate(179.4px, 209.3px);
+        transform: translate(179.4px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-6-8 {
+        -webkit-transform: translate(179.4px, 239.2px);
+        -moz-transform: translate(179.4px, 239.2px);
+        -o-transform: translate(179.4px, 239.2px);
+        transform: translate(179.4px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-6-9 {
+        -webkit-transform: translate(179.4px, 269.1px);
+        -moz-transform: translate(179.4px, 269.1px);
+        -o-transform: translate(179.4px, 269.1px);
+        transform: translate(179.4px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-6-10 {
+        -webkit-transform: translate(179.4px, 299px);
+        -moz-transform: translate(179.4px, 299px);
+        -o-transform: translate(179.4px, 299px);
+        transform: translate(179.4px, 299px); }
+      #game-grid-10 .tile-container .tile.position-6-11 {
+        -webkit-transform: translate(179.4px, 328.9px);
+        -moz-transform: translate(179.4px, 328.9px);
+        -o-transform: translate(179.4px, 328.9px);
+        transform: translate(179.4px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-6-12 {
+        -webkit-transform: translate(179.4px, 358.8px);
+        -moz-transform: translate(179.4px, 358.8px);
+        -o-transform: translate(179.4px, 358.8px);
+        transform: translate(179.4px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-6-13 {
+        -webkit-transform: translate(179.4px, 388.7px);
+        -moz-transform: translate(179.4px, 388.7px);
+        -o-transform: translate(179.4px, 388.7px);
+        transform: translate(179.4px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-6-14 {
+        -webkit-transform: translate(179.4px, 418.6px);
+        -moz-transform: translate(179.4px, 418.6px);
+        -o-transform: translate(179.4px, 418.6px);
+        transform: translate(179.4px, 418.6px); }
+      #game-grid-10 .tile-container .tile.position-7-0 {
+        -webkit-transform: translate(209.3px, 0px);
+        -moz-transform: translate(209.3px, 0px);
+        -o-transform: translate(209.3px, 0px);
+        transform: translate(209.3px, 0px); }
+      #game-grid-10 .tile-container .tile.position-7-1 {
+        -webkit-transform: translate(209.3px, 29.9px);
+        -moz-transform: translate(209.3px, 29.9px);
+        -o-transform: translate(209.3px, 29.9px);
+        transform: translate(209.3px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-7-2 {
+        -webkit-transform: translate(209.3px, 59.8px);
+        -moz-transform: translate(209.3px, 59.8px);
+        -o-transform: translate(209.3px, 59.8px);
+        transform: translate(209.3px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-7-3 {
+        -webkit-transform: translate(209.3px, 89.7px);
+        -moz-transform: translate(209.3px, 89.7px);
+        -o-transform: translate(209.3px, 89.7px);
+        transform: translate(209.3px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-7-4 {
+        -webkit-transform: translate(209.3px, 119.6px);
+        -moz-transform: translate(209.3px, 119.6px);
+        -o-transform: translate(209.3px, 119.6px);
+        transform: translate(209.3px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-7-5 {
+        -webkit-transform: translate(209.3px, 149.5px);
+        -moz-transform: translate(209.3px, 149.5px);
+        -o-transform: translate(209.3px, 149.5px);
+        transform: translate(209.3px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-7-6 {
+        -webkit-transform: translate(209.3px, 179.4px);
+        -moz-transform: translate(209.3px, 179.4px);
+        -o-transform: translate(209.3px, 179.4px);
+        transform: translate(209.3px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-7-7 {
+        -webkit-transform: translate(209.3px, 209.3px);
+        -moz-transform: translate(209.3px, 209.3px);
+        -o-transform: translate(209.3px, 209.3px);
+        transform: translate(209.3px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-7-8 {
+        -webkit-transform: translate(209.3px, 239.2px);
+        -moz-transform: translate(209.3px, 239.2px);
+        -o-transform: translate(209.3px, 239.2px);
+        transform: translate(209.3px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-7-9 {
+        -webkit-transform: translate(209.3px, 269.1px);
+        -moz-transform: translate(209.3px, 269.1px);
+        -o-transform: translate(209.3px, 269.1px);
+        transform: translate(209.3px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-7-10 {
+        -webkit-transform: translate(209.3px, 299px);
+        -moz-transform: translate(209.3px, 299px);
+        -o-transform: translate(209.3px, 299px);
+        transform: translate(209.3px, 299px); }
+      #game-grid-10 .tile-container .tile.position-7-11 {
+        -webkit-transform: translate(209.3px, 328.9px);
+        -moz-transform: translate(209.3px, 328.9px);
+        -o-transform: translate(209.3px, 328.9px);
+        transform: translate(209.3px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-7-12 {
+        -webkit-transform: translate(209.3px, 358.8px);
+        -moz-transform: translate(209.3px, 358.8px);
+        -o-transform: translate(209.3px, 358.8px);
+        transform: translate(209.3px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-7-13 {
+        -webkit-transform: translate(209.3px, 388.7px);
+        -moz-transform: translate(209.3px, 388.7px);
+        -o-transform: translate(209.3px, 388.7px);
+        transform: translate(209.3px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-7-14 {
+        -webkit-transform: translate(209.3px, 418.6px);
+        -moz-transform: translate(209.3px, 418.6px);
+        -o-transform: translate(209.3px, 418.6px);
+        transform: translate(209.3px, 418.6px); }
+      #game-grid-10 .tile-container .tile.position-8-0 {
+        -webkit-transform: translate(239.2px, 0px);
+        -moz-transform: translate(239.2px, 0px);
+        -o-transform: translate(239.2px, 0px);
+        transform: translate(239.2px, 0px); }
+      #game-grid-10 .tile-container .tile.position-8-1 {
+        -webkit-transform: translate(239.2px, 29.9px);
+        -moz-transform: translate(239.2px, 29.9px);
+        -o-transform: translate(239.2px, 29.9px);
+        transform: translate(239.2px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-8-2 {
+        -webkit-transform: translate(239.2px, 59.8px);
+        -moz-transform: translate(239.2px, 59.8px);
+        -o-transform: translate(239.2px, 59.8px);
+        transform: translate(239.2px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-8-3 {
+        -webkit-transform: translate(239.2px, 89.7px);
+        -moz-transform: translate(239.2px, 89.7px);
+        -o-transform: translate(239.2px, 89.7px);
+        transform: translate(239.2px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-8-4 {
+        -webkit-transform: translate(239.2px, 119.6px);
+        -moz-transform: translate(239.2px, 119.6px);
+        -o-transform: translate(239.2px, 119.6px);
+        transform: translate(239.2px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-8-5 {
+        -webkit-transform: translate(239.2px, 149.5px);
+        -moz-transform: translate(239.2px, 149.5px);
+        -o-transform: translate(239.2px, 149.5px);
+        transform: translate(239.2px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-8-6 {
+        -webkit-transform: translate(239.2px, 179.4px);
+        -moz-transform: translate(239.2px, 179.4px);
+        -o-transform: translate(239.2px, 179.4px);
+        transform: translate(239.2px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-8-7 {
+        -webkit-transform: translate(239.2px, 209.3px);
+        -moz-transform: translate(239.2px, 209.3px);
+        -o-transform: translate(239.2px, 209.3px);
+        transform: translate(239.2px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-8-8 {
+        -webkit-transform: translate(239.2px, 239.2px);
+        -moz-transform: translate(239.2px, 239.2px);
+        -o-transform: translate(239.2px, 239.2px);
+        transform: translate(239.2px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-8-9 {
+        -webkit-transform: translate(239.2px, 269.1px);
+        -moz-transform: translate(239.2px, 269.1px);
+        -o-transform: translate(239.2px, 269.1px);
+        transform: translate(239.2px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-8-10 {
+        -webkit-transform: translate(239.2px, 299px);
+        -moz-transform: translate(239.2px, 299px);
+        -o-transform: translate(239.2px, 299px);
+        transform: translate(239.2px, 299px); }
+      #game-grid-10 .tile-container .tile.position-8-11 {
+        -webkit-transform: translate(239.2px, 328.9px);
+        -moz-transform: translate(239.2px, 328.9px);
+        -o-transform: translate(239.2px, 328.9px);
+        transform: translate(239.2px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-8-12 {
+        -webkit-transform: translate(239.2px, 358.8px);
+        -moz-transform: translate(239.2px, 358.8px);
+        -o-transform: translate(239.2px, 358.8px);
+        transform: translate(239.2px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-8-13 {
+        -webkit-transform: translate(239.2px, 388.7px);
+        -moz-transform: translate(239.2px, 388.7px);
+        -o-transform: translate(239.2px, 388.7px);
+        transform: translate(239.2px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-8-14 {
+        -webkit-transform: translate(239.2px, 418.6px);
+        -moz-transform: translate(239.2px, 418.6px);
+        -o-transform: translate(239.2px, 418.6px);
+        transform: translate(239.2px, 418.6px); }
+      #game-grid-10 .tile-container .tile.position-9-0 {
+        -webkit-transform: translate(269.1px, 0px);
+        -moz-transform: translate(269.1px, 0px);
+        -o-transform: translate(269.1px, 0px);
+        transform: translate(269.1px, 0px); }
+      #game-grid-10 .tile-container .tile.position-9-1 {
+        -webkit-transform: translate(269.1px, 29.9px);
+        -moz-transform: translate(269.1px, 29.9px);
+        -o-transform: translate(269.1px, 29.9px);
+        transform: translate(269.1px, 29.9px); }
+      #game-grid-10 .tile-container .tile.position-9-2 {
+        -webkit-transform: translate(269.1px, 59.8px);
+        -moz-transform: translate(269.1px, 59.8px);
+        -o-transform: translate(269.1px, 59.8px);
+        transform: translate(269.1px, 59.8px); }
+      #game-grid-10 .tile-container .tile.position-9-3 {
+        -webkit-transform: translate(269.1px, 89.7px);
+        -moz-transform: translate(269.1px, 89.7px);
+        -o-transform: translate(269.1px, 89.7px);
+        transform: translate(269.1px, 89.7px); }
+      #game-grid-10 .tile-container .tile.position-9-4 {
+        -webkit-transform: translate(269.1px, 119.6px);
+        -moz-transform: translate(269.1px, 119.6px);
+        -o-transform: translate(269.1px, 119.6px);
+        transform: translate(269.1px, 119.6px); }
+      #game-grid-10 .tile-container .tile.position-9-5 {
+        -webkit-transform: translate(269.1px, 149.5px);
+        -moz-transform: translate(269.1px, 149.5px);
+        -o-transform: translate(269.1px, 149.5px);
+        transform: translate(269.1px, 149.5px); }
+      #game-grid-10 .tile-container .tile.position-9-6 {
+        -webkit-transform: translate(269.1px, 179.4px);
+        -moz-transform: translate(269.1px, 179.4px);
+        -o-transform: translate(269.1px, 179.4px);
+        transform: translate(269.1px, 179.4px); }
+      #game-grid-10 .tile-container .tile.position-9-7 {
+        -webkit-transform: translate(269.1px, 209.3px);
+        -moz-transform: translate(269.1px, 209.3px);
+        -o-transform: translate(269.1px, 209.3px);
+        transform: translate(269.1px, 209.3px); }
+      #game-grid-10 .tile-container .tile.position-9-8 {
+        -webkit-transform: translate(269.1px, 239.2px);
+        -moz-transform: translate(269.1px, 239.2px);
+        -o-transform: translate(269.1px, 239.2px);
+        transform: translate(269.1px, 239.2px); }
+      #game-grid-10 .tile-container .tile.position-9-9 {
+        -webkit-transform: translate(269.1px, 269.1px);
+        -moz-transform: translate(269.1px, 269.1px);
+        -o-transform: translate(269.1px, 269.1px);
+        transform: translate(269.1px, 269.1px); }
+      #game-grid-10 .tile-container .tile.position-9-10 {
+        -webkit-transform: translate(269.1px, 299px);
+        -moz-transform: translate(269.1px, 299px);
+        -o-transform: translate(269.1px, 299px);
+        transform: translate(269.1px, 299px); }
+      #game-grid-10 .tile-container .tile.position-9-11 {
+        -webkit-transform: translate(269.1px, 328.9px);
+        -moz-transform: translate(269.1px, 328.9px);
+        -o-transform: translate(269.1px, 328.9px);
+        transform: translate(269.1px, 328.9px); }
+      #game-grid-10 .tile-container .tile.position-9-12 {
+        -webkit-transform: translate(269.1px, 358.8px);
+        -moz-transform: translate(269.1px, 358.8px);
+        -o-transform: translate(269.1px, 358.8px);
+        transform: translate(269.1px, 358.8px); }
+      #game-grid-10 .tile-container .tile.position-9-13 {
+        -webkit-transform: translate(269.1px, 388.7px);
+        -moz-transform: translate(269.1px, 388.7px);
+        -o-transform: translate(269.1px, 388.7px);
+        transform: translate(269.1px, 388.7px); }
+      #game-grid-10 .tile-container .tile.position-9-14 {
+        -webkit-transform: translate(269.1px, 418.6px);
+        -moz-transform: translate(269.1px, 418.6px);
+        -o-transform: translate(269.1px, 418.6px);
+        transform: translate(269.1px, 418.6px); }
+      #game-grid-10 .tile-container .tile .tile-inner {
+        width: 28.9px;
+        height: 28.9px;
+        background: #B60022;
+        line-height: 29px;
+        text-align: center;
+        font-weight: bold;
+        z-index: 10;
+        font-size: 2.5em; }
