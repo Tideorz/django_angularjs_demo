@@ -17,16 +17,45 @@ angular.module('Grid', [])
 		  next: function() { return generateUid(); }
 	  };  
 })
-.factory('TileModel', function(GenerateUniqueId) {
-	var	Tile = function(pos) {
+.factory('TileModel', ['GenerateUniqueId', function(GenerateUniqueId) {
+	function TileModel(pos) {
 		this.x = pos.x;
 		this.y = pos.y;
 
 		this.id = GenerateUniqueId.next();
 	};
+
+	TileModel.prototype.setUniqueId = function(unique_id) {
+		this.id = unique_id;
+	}
+	return TileModel;
+}])
+.factory('MovingShapeModel', ['TileModel', function(TileModel) {
+	function MovingShapeModel(){
+		/* list to store the TileModel's unique and its current
+		 * position 
+		 */
+		this.moving_tiles = [];
+		this.type = 1;
+		this.randomShape();
+	}
+	// randomly create the four basic shapes.	
+	MovingShapeModel.prototype.randomShape = function(){
+		var pos = {x: 4, y: 0};	
+		var tile_obj = new TileModel(pos);
+		this.moving_tiles.push({'id': tile_obj.id, 'obj': tile_obj});
+	};
+	MovingShapeModel.prototype.getSingleShapePos = function(singleShape){
 	
-	return Tile;
-})
+		var position = {'x': singleShape['obj']['x'], 
+						'y': singleShape['obj']['y'] };
+		return position
+	};
+	MovingShapeModel.prototype.rotateShape = function(){};
+	MovingShapeModel.prototype.moveShape = function(){};
+
+	return MovingShapeModel;
+}])
 .provider('GridService', function() {
 	/* settings the game grid size , using $controller to init
 	 * this controller in app.js
@@ -38,15 +67,12 @@ angular.module('Grid', [])
 		this.width = width ? width : 10;
 	};
 
-	this.$get = function(TileModel) {
+	this.$get = function(TileModel, MovingShapeModel) {
+		this.movingShape = new MovingShapeModel();
 		/* current static grid */
 		this.grid = [];
 		/* the moving grid tiles */
 		this.tiles = [];
-
-		// test tiles array
-		this.tiles.push(new TileModel({x: 1, y: 2}));
-		this.tiles.push(new TileModel({x: 2, y: 3}));
 
 		this.get_grid_height_width = function() {
 			return {
@@ -64,8 +90,64 @@ angular.module('Grid', [])
 
 		/* build random mobile tiles */
 		this.buildMobileTiles = function() {
+			var moving_tiles = this.movingShape.moving_tiles;
+			for (var moving_idx = 0; moving_idx < moving_tiles.length;
+					moving_idx++) {
+				var moving_tile = moving_tiles[moving_idx];
+				this.tiles.push(moving_tile['obj']);
+			}
+		};
 
+		/* check whether the moving shape can move to one direction */
+		this.movesAvailable = function(direction){
+			var position_dict = [];
+			for(var tile_idx = 0; tile_idx < this.tiles.length; 
+				tile_idx++) {
+				var position_str = this.tiles[tile_idx].x + '-' + this.tiles[tile_idx].y;
+				position_dict[position_str] = 1;
+			}
+			if(direction === 'down') {
+				var moving_tiles = this.movingShape.moving_tiles;
+				for (var moving_idx = 0; moving_idx < moving_tiles.length; 
+					moving_idx++) {
+					var single_moving_shape = moving_tiles[moving_idx];
+					var position = this.movingShape.getSingleShapePos(single_moving_shape);
+					position.next_y = position.y + 1;
+					var next_tile_position = position.x + '-' + position.next_y;
+					if (position_dict[next_tile_position] !== undefined) {
+						return false;	
+					}
+				}
+				return true;
+			}	
 		};
-			return this;	
+
+		this.moveTile = function(tile, newPosition) {
+			tile.x = newPosition.x;
+			tile.y = newPosition.y;
 		};
+
+		this.getTile = function(uniqueId) {
+			for (var tile_idx = 0; tile_idx < this.tiles.length; tile_idx++) {
+				if(this.tiles[tile_idx].id === uniqueId)	{
+					return this.tiles[tile_idx];		
+				}
+			}	
+		};
+
+		this.movingShapeDown = function() {
+			if(this.movesAvailable('down')) {
+				var moving_tiles = this.movingShape.moving_tiles;
+				for (var moving_idx = 0; moving_idx < moving_tiles.length; 
+					moving_idx++) {
+					var single_moving_shape = moving_tiles[moving_idx];
+					var position = this.movingShape.getSingleShapePos(single_moving_shape);
+					var next_tile_position;
+					next_tile_position = {'x': position.x, 'y': position.y + 1 };
+					this.moveTile(single_moving_shape['obj'], next_tile_position);
+				}
+			}				
+		};
+		return this;	
+	};
 });

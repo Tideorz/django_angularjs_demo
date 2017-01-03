@@ -9,10 +9,9 @@ config(function(GridServiceProvider) {
 	this.newGame = function() {
 		this.game.newGame();	
 	};
-
 	this.newGame();
+	this.game.gameMainloop();
 });
-
 
 // Django compatibility
 ngModule.config(['$interpolateProvider', '$httpProvider', 
