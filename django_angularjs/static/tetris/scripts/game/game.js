@@ -32,12 +32,9 @@ angular.module('Game', ['Grid'])
 	this.down_interval = 1000;
 
 	this.moving_tiles_down = function() {
-		if (GridService.movesAvailable('down')) {
-			GridService.movingShapeDown();
-		}				
+		GridService.movingShapeDown();
 	};
-
-	this.gameMainloop = function(){
+	this.moveShapeDown = function(){
 		GridService.buildMobileTiles();
 		$interval(this.moving_tiles_down, this.down_interval)		
 	};

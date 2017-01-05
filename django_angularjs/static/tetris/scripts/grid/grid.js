@@ -43,12 +43,12 @@ angular.module('Grid', [])
 	MovingShapeModel.prototype.randomShape = function(){
 		var pos = {x: 4, y: 0};	
 		var tile_obj = new TileModel(pos);
-		this.moving_tiles.push({'id': tile_obj.id, 'obj': tile_obj});
+		this.moving_tiles.push(tile_obj);
 	};
 	MovingShapeModel.prototype.getSingleShapePos = function(singleShape){
 	
-		var position = {'x': singleShape['obj']['x'], 
-						'y': singleShape['obj']['y'] };
+		var position = {'x': singleShape['x'], 
+						'y': singleShape['y'] };
 		return position
 	};
 	MovingShapeModel.prototype.rotateShape = function(){};
@@ -94,7 +94,7 @@ angular.module('Grid', [])
 			for (var moving_idx = 0; moving_idx < moving_tiles.length;
 					moving_idx++) {
 				var moving_tile = moving_tiles[moving_idx];
-				this.tiles.push(moving_tile['obj']);
+				this.tiles.push(moving_tile);
 			}
 		};
 
@@ -113,13 +113,16 @@ angular.module('Grid', [])
 					var single_moving_shape = moving_tiles[moving_idx];
 					var position = this.movingShape.getSingleShapePos(single_moving_shape);
 					position.next_y = position.y + 1;
+					if (position.next_y > this.height - 1) {
+						return false;	
+					}
 					var next_tile_position = position.x + '-' + position.next_y;
 					if (position_dict[next_tile_position] !== undefined) {
 						return false;	
 					}
 				}
 				return true;
-			}	
+			}
 		};
 
 		this.moveTile = function(tile, newPosition) {
@@ -144,7 +147,7 @@ angular.module('Grid', [])
 					var position = this.movingShape.getSingleShapePos(single_moving_shape);
 					var next_tile_position;
 					next_tile_position = {'x': position.x, 'y': position.y + 1 };
-					this.moveTile(single_moving_shape['obj'], next_tile_position);
+					this.moveTile(single_moving_shape, next_tile_position);
 				}
 			}				
 		};
