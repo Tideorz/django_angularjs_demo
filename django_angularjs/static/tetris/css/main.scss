@@ -7,6 +7,7 @@ $height_factor: 1.5;
 $game-container-background: #bbada0;
 $text-color: #776E65;
 $tile-padding: 1px;
+$transition-time: 10ms;
 
 .container {
   max-width: 500px;
@@ -74,9 +75,10 @@ html, body {
 				position: absolute;
 				width: $tile-size;
 				height: $tile-size;
-				//-webkit-transition-property: -webkit-transform;
-        		//-moz-transition-property: -moz-transform;
-        		//transition-property: transform;
+				@include transition($transition-time ease-in-out);
+				-webkit-transition-property: -webkit-transform;
+        		-moz-transition-property: -moz-transform;
+        		transition-property: transform;
         		z-index: 2;
 
 				@for $x from 1 through $tile-count {

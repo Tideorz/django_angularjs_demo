@@ -32,10 +32,13 @@ angular.module('Grid', [])
 }])
 .factory('MovingShapeModel', ['TileModel', function(TileModel) {
 	function MovingShapeModel(){
-		/* list to store the TileModel's unique and its current
-		 * position 
-		 */
+		/* list to store the TileModel instance */
 		this.moving_tiles = [];
+		
+		/* the moving Tile instance's position change queue 
+		 *  {tileInstance: [position1, postion2, ...] }
+		 */
+		this.position_change_queue = [];
 		this.type = 1;
 		this.randomShape();
 	}
@@ -106,28 +109,30 @@ angular.module('Grid', [])
 				var position_str = this.tiles[tile_idx].x + '-' + this.tiles[tile_idx].y;
 				position_dict[position_str] = 1;
 			}
-			if(direction === 'down') {
-				var moving_tiles = this.movingShape.moving_tiles;
-				for (var moving_idx = 0; moving_idx < moving_tiles.length; 
-					moving_idx++) {
-					var single_moving_shape = moving_tiles[moving_idx];
-					var position = this.movingShape.getSingleShapePos(single_moving_shape);
-					position.next_y = position.y + 1;
-					if (position.next_y > this.height - 1) {
-						return false;	
-					}
-					var next_tile_position = position.x + '-' + position.next_y;
-					if (position_dict[next_tile_position] !== undefined) {
-						return false;	
-					}
+			var moving_tiles = this.movingShape.moving_tiles;
+			for (var moving_idx = 0; moving_idx < moving_tiles.length; 
+				moving_idx++) {
+				var single_moving_shape = moving_tiles[moving_idx];
+				var position = this.getTileNextPosition(single_moving_shape, direction);
+				if (position.next_y > this.height - 1 || 
+					position.next_x < 0 || position.next_x > this.width - 1 ) {
+					return false;	
 				}
-				return true;
+				var next_tile_position = position.next_x + '-' + position.next_y;
+				if (position_dict[next_tile_position] !== undefined) {
+					return false;	
+				}
 			}
+			return true;
 		};
 
-		this.moveTile = function(tile, newPosition) {
-			tile.x = newPosition.x;
-			tile.y = newPosition.y;
+		this.moveTile = function(tile, newPosition){
+			tile.x = newPosition.next_x;
+			tile.y = newPosition.next_y;
+		}
+
+		this.addPositionChange = function(tile, position_change) {
+			this.movingShape.position_change_queue.push(position_change);
 		};
 
 		this.getTile = function(uniqueId) {
@@ -138,16 +143,40 @@ angular.module('Grid', [])
 			}	
 		};
 
-		this.movingShapeDown = function() {
-			if(this.movesAvailable('down')) {
+		this.getTileNextPosition = function(tile, direction) {
+			/* when player click up, down, left, right
+			 * get the tile next position 
+			 */
+			var position = {'x': tile['x'], 'y': tile['y'] };
+			switch (direction)
+			{
+				case 'down':
+					position.next_y = position.y + 1;
+					position.next_x = position.x;
+					break;
+				case 'left': 
+					position.next_y = position.y ;
+					position.next_x = position.x - 1;
+					break;
+				case 'right':
+					position.next_y = position.y ;
+					position.next_x = position.x + 1;
+					break;
+				case 'up':
+					break;
+			}
+			return position; 
+		};
+
+		this.moveShape = function(direction) {
+			if(this.movesAvailable(direction)) {
 				var moving_tiles = this.movingShape.moving_tiles;
 				for (var moving_idx = 0; moving_idx < moving_tiles.length; 
 					moving_idx++) {
 					var single_moving_shape = moving_tiles[moving_idx];
-					var position = this.movingShape.getSingleShapePos(single_moving_shape);
-					var next_tile_position;
-					next_tile_position = {'x': position.x, 'y': position.y + 1 };
-					this.moveTile(single_moving_shape, next_tile_position);
+					var next_tile_position = this.getTileNextPosition(single_moving_shape, direction);
+					var position_change = {'obj': single_moving_shape, 'pos': next_tile_position};
+					this.addPositionChange(single_moving_shape, position_change);
 				}
 			}				
 		};

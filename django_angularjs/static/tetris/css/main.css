@@ -48,6 +48,9 @@ html, body {
       position: absolute;
       width: 28.9px;
       height: 28.9px;
+      -webkit-transition: 10ms ease-in-out;
+      -moz-transition: 10ms ease-in-out;
+      transition: 10ms ease-in-out;
       -webkit-transition-property: -webkit-transform;
       -moz-transition-property: -moz-transform;
       transition-property: transform;
