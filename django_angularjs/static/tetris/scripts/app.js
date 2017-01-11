@@ -24,11 +24,14 @@ function($scope, GameManagerService, KeyboardService, GridService) {
 	});
 
 	$scope.$watchCollection('position_change_queue', function() {
-		for(var chg_idx = 0; chg_idx < $scope.position_change_queue.length; chg_idx++) {
-			var pos_change = $scope.position_change_queue.shift();
-			var tile = pos_change['obj'];
-			var newPos = pos_change['pos']; 
-			GridService.moveTile(tile, newPos);		
+		for(var queue_idx = 0; queue_idx < $scope.position_change_queue.length; queue_idx++) {
+			var pos_change_list = $scope.position_change_queue.shift();
+			for(var chg_idx = 0; chg_idx < pos_change_list.length; chg_idx++) {
+				var pos_change = pos_change_list[chg_idx];
+				var tile = pos_change['obj'];
+				var newPos = pos_change['pos']; 
+				GridService.moveTile(tile, newPos);		
+			}
 		}
 	});
 }]);
