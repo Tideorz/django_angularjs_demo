@@ -44,8 +44,13 @@ angular.module('Grid', [])
 		 *  {tileInstance: [position1, postion2, ...] }
 		 */
 		this.position_change_queue = [];
-		this.type = 1;
+
+		/* current shape type, including line, Z, square , L and
+		 * T shapes
+		 */
+		this.shapetype = 0;
 		this.relPosList = [];
+		this.tempPosList = [];
 	}
 
 	/* Set the init Moving Shape initial position randomly */
@@ -53,32 +58,32 @@ angular.module('Grid', [])
 		var midX = parseInt((gridWidth-1)/2);
 		var originPos = {'x': midX, 'y': -1}
 		var initPosList = [];
-		/*  ####  */
-		var rand_idx = Math.floor(Math.random() * 4);
+		var rand_idx = 1; //Math.floor(Math.random() * 4);
 		rand_idx = rand_idx.toString();
 		var relPosArray = {
-			'0':
+			'0': /* line shape */
 			[
 				{'x': -1, 'y':0}, {'x':0, 'y': 0},
 				{'x': 1, 'y': 0},{'x':2, 'y': 0} 
 			] ,
-			'1':
+			'1': /* Z shape */
 			[
-				{'x': 0, 'y':1}, {'x':0, 'y': 0},
-				{'x': 1, 'y':0 },{'x':1, 'y': 1}
+				{'x': -1, 'y':0}, {'x':0, 'y': 0},
+				{'x': 0, 'y':1 },{'x':1, 'y': 1}
 			] ,
-			'2':
+			'2': /* square shape */
 			[
 				{'x': 0, 'y':-1}, {'x':0, 'y': 0},
 				{'x': -1, 'y':-1 },{'x':1, 'y': 0}
 			] ,
-			'3':
+			'3': /* L shape */
 			[
 				{'x': -1, 'y':0}, {'x':0, 'y': 0},
 				{'x': -1, 'y':-1 },{'x':1, 'y': 0}
 			],
 		};
 		this.relPosList = relPosArray[rand_idx];
+		this.shapetype = rand_idx;
 		for(var pos_idx = 0; pos_idx < 4; pos_idx++) {
 			var relX = this.relPosList[pos_idx]['x'];
 			var relY = this.relPosList[pos_idx]['y'];
@@ -90,9 +95,9 @@ angular.module('Grid', [])
 
 	/* randomly create the four basic shapes. */	
 	MovingShapeModel.prototype.randomShape = function(){
-		var initPosList = this.initPos(10);
-		for (var pos_idx = 0; pos_idx < initPosList.length; pos_idx++) {
-			var pos = initPosList[pos_idx];			
+		this.initPosList = this.initPos(10);
+		for (var pos_idx = 0; pos_idx < this.initPosList.length; pos_idx++) {
+			var pos = this.initPosList[pos_idx];			
 			var tile_obj = new TileModel(pos);
 			this.moving_tiles.push(tile_obj);
 		}
@@ -104,26 +109,63 @@ angular.module('Grid', [])
 		return position
 	};
 
-	MovingShapeModel.prototype.rotateShape = function(){
+	MovingShapeModel.prototype.getRotateNextPosition = function(central_pos, 
+		cur_pos, reverse) {
+		/* central_pos: central point's position						
+		 * cur_pos: the position of point which need to be rotated
+		 * reverse: if set True, means counterclockwise rotation
+		 */
+		var factor = reverse === undefined || reverse === 0  ? 1 : -1 ;
+		var nextX =  factor * (central_pos['y'] - cur_pos['y']) + central_pos['x'];
+		var nextY =  factor * (cur_pos['x'] - central_pos['x']) +  central_pos['y'];
+		var nextPos = {'x': nextX, 'y': nextY};
+		return nextPos;
+	};
+
+	MovingShapeModel.prototype.is_shape_vertical = function() {
+		var y = this.moving_tiles[0]['y'];
+		for(var pos_idx = 1; pos_idx < this.moving_tiles.length ; pos_idx++) {
+			y1 = this.moving_tiles[pos_idx]['y'];
+			y = y^y1;
+		}
+		return y ? 0 : 1;
+			
+	};
+
+	MovingShapeModel.prototype.changeCentraoPoint = function() {
+		if (this.shapetype == 1) {
+			/* when the shape is a line, the shape beacome vertical and 
+			 * reach the left or rigth edge, need to change the central point 
+			 * of rotation.
+		 	 */
+			if(this.is_shape_vertical()) {
+				// pass	
+			}
+		}
+	};
+
+	MovingShapeModel.prototype.rotateShape = function() {
 		/* alway rotate base on the second tile in moving_tiles[1]  */
 		var central_tile = this.moving_tiles[1];
 		var pos_change_list = [];
 		for(var pos_idx = 0; pos_idx < 4; pos_idx++) {
-			var relX = this.relPosList[pos_idx]['x'];
-			var relY = this.relPosList[pos_idx]['y'];
-			var chgPos = {'x': relY, 'y': -relX};
+			var curPos = {'x': this.moving_tiles[pos_idx]['x'], 'y': this.moving_tiles[pos_idx]['y'] } ;
+			var centralPos = {'x': central_tile.x, 'y': central_tile.y };
+			var nextPos = this.getRotateNextPosition(centralPos, curPos);
+			var next_relative_x = nextPos['x'] - centralPos['x'];
+			var next_relative_y = nextPos['y'] - centralPos['y'];
 			/* for the line shape, must keep central point
 			 * in second point from left to right when it's horizontal 
 			 * and second point from top to bottom when it's vertical
 			 */
-			if (chgPos['x'] == -2) {
-				chgPos['x'] = 2;
+			if (next_relative_x == -2) {
+				nextPos['x'] = nextPos['x'] + 4;		
+				next_relative_x = 2;
 			}
-			if (chgPos['y'] == -2) {
-				chgPos['y'] = 2;	
+			if (next_relative_y == -2) {
+				nextPos['y'] = nextPos['y'] + 4;	
+				next_relative_y = 2;
 			}
-			this.relPosList[pos_idx] = chgPos;
-			var nextPos = {'x': central_tile.x+chgPos['x'], 'y': central_tile.y+chgPos['y']};
 			var position_change = {'obj': this.moving_tiles[pos_idx], 'pos': nextPos};
 			pos_change_list.push(position_change);
 		}
@@ -209,7 +251,8 @@ angular.module('Grid', [])
 						return {'can_move': false, 'change_list': [] };	
 					}
 					var next_tile_position = position.x + '-' + position.y;
-					if (position_dict[next_tile_position] !== undefined && moving_idx != 1) {
+					if (position_dict[next_tile_position] !== undefined 
+							&& moving_tiles_poslist.indexOf(next_tile_position) < 0) {
 						return {'can_move': false, 'change_list': [] };	
 					}
 				}
