@@ -36,7 +36,7 @@ angular.module('Grid', [])
 	return TileModel;
 }])
 .factory('MovingShapeModel', ['TileModel', function(TileModel) {
-	function MovingShapeModel(){
+	function MovingShapeModel(width, height){
 		/* list to store the TileModel instance */
 		this.moving_tiles = [];
 		
@@ -51,6 +51,8 @@ angular.module('Grid', [])
 		this.shapetype = 0;
 		this.relPosList = [];
 		this.tempPosList = [];
+		this.width = width;
+		this.height = height;
 	}
 
 	/* Set the init Moving Shape initial position randomly */
@@ -58,7 +60,7 @@ angular.module('Grid', [])
 		var midX = parseInt((gridWidth-1)/2);
 		var originPos = {'x': midX, 'y': -1}
 		var initPosList = [];
-		var rand_idx = 1; //Math.floor(Math.random() * 4);
+		var rand_idx = 0; //Math.floor(Math.random() * 4);
 		rand_idx = rand_idx.toString();
 		var relPosArray = {
 			'0': /* line shape */
@@ -106,66 +108,105 @@ angular.module('Grid', [])
 	
 		var position = {'x': singleShape['x'], 
 						'y': singleShape['y'] };
-		return position
+		return position;
 	};
 
 	MovingShapeModel.prototype.getRotateNextPosition = function(central_pos, 
-		cur_pos, reverse) {
-		/* central_pos: central point's position						
-		 * cur_pos: the position of point which need to be rotated
-		 * reverse: if set True, means counterclockwise rotation
-		 */
-		var factor = reverse === undefined || reverse === 0  ? 1 : -1 ;
-		var nextX =  factor * (central_pos['y'] - cur_pos['y']) + central_pos['x'];
-		var nextY =  factor * (cur_pos['x'] - central_pos['x']) +  central_pos['y'];
-		var nextPos = {'x': nextX, 'y': nextY};
-		return nextPos;
+		cur_pos, is_reverse=0) {
+
+		var relX = cur_pos['x'] - central_pos['x'];
+    	var relY = cur_pos['y'] - central_pos['y'];    
+		var x2, y2;
+    	if (is_reverse === 0) { 
+    	    var x2 = -relY + central_pos['x'];                     
+    	    var y2 = relX  + central_pos['y'];                     
+		}
+    	else {
+    	    x2 = relY + central_pos['x'];
+    	    y2 = -relX + central_pos['y'];
+		}
+    	return {'x': x2, 'y': y2};
+
+		///* central_pos: central point's position						
+		// * cur_pos: the position of point which need to be rotated
+		// */
+		//var nextX =  (central_pos['y'] - cur_pos['y']) + central_pos['x'];
+		//var nextY =  (cur_pos['x'] - central_pos['x']) +  central_pos['y'];
+		//var nextPos = {'x': nextX, 'y': nextY};
+		//return nextPos;
 	};
 
 	MovingShapeModel.prototype.is_shape_vertical = function() {
-		var y = this.moving_tiles[0]['y'];
+		var x = this.moving_tiles[0]['x'];
 		for(var pos_idx = 1; pos_idx < this.moving_tiles.length ; pos_idx++) {
-			y1 = this.moving_tiles[pos_idx]['y'];
-			y = y^y1;
+			var x1 = this.moving_tiles[pos_idx]['x'];
+			x = x^x1;
 		}
-		return y ? 0 : 1;
-			
+		return x ? 0 : 1;
 	};
 
-	MovingShapeModel.prototype.changeCentraoPoint = function() {
-		if (this.shapetype == 1) {
+	MovingShapeModel.prototype.is_on_the_edge = function(central_tile) {
+		/* if the shape is on the left edge, return -1
+		 * if the shape is on the right edge, return 1; 
+		 * if not both, return 0; var y = this.moving_tiles[0]['y'];	
+		 */
+		if (central_tile.x == 0) return -1;
+		else if (central_tile.x == this.width - 1) return 1;
+		else return 0;
+	};
+
+	MovingShapeModel.prototype.chooseCentralPoint = function(central_tile) {
+		/* help to change the rotation's central point, and the direction 
+		 * of rotation, when the chg flag is 1, means need change the 
+		 * central point.
+		 */
+		var centralPos = {'x': central_tile.x, 'y': central_tile.y};
+		var newCentralPos;
+		if (this.shapetype == 0) {
 			/* when the shape is a line, the shape beacome vertical and 
 			 * reach the left or rigth edge, need to change the central point 
 			 * of rotation.
 		 	 */
 			if(this.is_shape_vertical()) {
-				// pass	
+				var ret = this.is_on_the_edge(central_tile);
+				if (ret == -1) { /*left edge*/
+					newCentralPos = {'x': central_tile.x, 'y': central_tile.y-1};
+					var reverse = 0;	
+					return {'pos': newCentralPos, 'chg': 1};
+				}else if(ret == 1) { /*right edge*/
+					newCentralPos = {'x': central_tile.x, 'y': central_tile.y-1};
+					return {'pos': newCentralPos, 'chg': 1};
+				}
 			}
 		}
+		return {'pos': centralPos, 'chg': 0};
 	};
+
 
 	MovingShapeModel.prototype.rotateShape = function() {
 		/* alway rotate base on the second tile in moving_tiles[1]  */
 		var central_tile = this.moving_tiles[1];
 		var pos_change_list = [];
+		var ret = this.chooseCentralPoint(central_tile);
 		for(var pos_idx = 0; pos_idx < 4; pos_idx++) {
 			var curPos = {'x': this.moving_tiles[pos_idx]['x'], 'y': this.moving_tiles[pos_idx]['y'] } ;
-			var centralPos = {'x': central_tile.x, 'y': central_tile.y };
-			var nextPos = this.getRotateNextPosition(centralPos, curPos);
+			var centralPos = ret['pos'];
+			var chg = ret['chg'];
+			var nextPos = this.getRotateNextPosition(centralPos, curPos, 1);
 			var next_relative_x = nextPos['x'] - centralPos['x'];
 			var next_relative_y = nextPos['y'] - centralPos['y'];
 			/* for the line shape, must keep central point
 			 * in second point from left to right when it's horizontal 
 			 * and second point from top to bottom when it's vertical
 			 */
-			if (next_relative_x == -2) {
-				nextPos['x'] = nextPos['x'] + 4;		
-				next_relative_x = 2;
-			}
-			if (next_relative_y == -2) {
-				nextPos['y'] = nextPos['y'] + 4;	
-				next_relative_y = 2;
-			}
+			//if (next_relative_x == -2 && chg == 0) {
+			//	nextPos['x'] = nextPos['x'] + 4;		
+			//	next_relative_x = 2;
+			//}
+			//if (next_relative_y == -2 && chg == 0) {
+			//	nextPos['y'] = nextPos['y'] + 4;	
+			//	next_relative_y = 2;
+			//}
 			var position_change = {'obj': this.moving_tiles[pos_idx], 'pos': nextPos};
 			pos_change_list.push(position_change);
 		}
@@ -188,7 +229,7 @@ angular.module('Grid', [])
 	};
 
 	this.$get = function(TileModel, MovingShapeModel) {
-		this.movingShape = new MovingShapeModel();
+		this.movingShape = new MovingShapeModel(this.width, this.height);
 		/* current static grid */
 		this.grid = [];
 		/* the moving grid tiles */

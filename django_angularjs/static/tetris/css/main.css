@@ -48,12 +48,6 @@ html, body {
       position: absolute;
       width: 28.9px;
       height: 28.9px;
-      -webkit-transition: 10ms ease-in-out;
-      -moz-transition: 10ms ease-in-out;
-      transition: 10ms ease-in-out;
-      -webkit-transition-property: -webkit-transform;
-      -moz-transition-property: -moz-transform;
-      transition-property: transform;
       z-index: 2; }
       #game-grid-10 .tile-container .tile.position-0-0 {
         -webkit-transform: translate(0px, 0px);
