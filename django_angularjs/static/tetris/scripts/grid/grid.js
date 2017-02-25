@@ -114,103 +114,162 @@ angular.module('Grid', [])
 	MovingShapeModel.prototype.getRotateNextPosition = function(central_pos, 
 		cur_pos, is_reverse=0) {
 
-		var relX = cur_pos['x'] - central_pos['x'];
-    	var relY = cur_pos['y'] - central_pos['y'];    
+		var relX = cur_pos['x'] - central_pos['x']    
+		var relY = cur_pos['y'] - central_pos['y']    
 		var x2, y2;
-    	if (is_reverse === 0) { 
-    	    var x2 = -relY + central_pos['x'];                     
-    	    var y2 = relX  + central_pos['y'];                     
+		if (is_reverse == 0) {
+			x2 = -relY + central_pos['x']    
+			y2 = relX  + central_pos['y']    
+		}else {
+			x2 = relY + central_pos['x']
+			y2 = -relX + central_pos['y']
 		}
-    	else {
-    	    x2 = relY + central_pos['x'];
-    	    y2 = -relX + central_pos['y'];
-		}
-    	return {'x': x2, 'y': y2};
+		return {'x': x2, 'y': y2} 
 
-		///* central_pos: central point's position						
-		// * cur_pos: the position of point which need to be rotated
-		// */
-		//var nextX =  (central_pos['y'] - cur_pos['y']) + central_pos['x'];
-		//var nextY =  (cur_pos['x'] - central_pos['x']) +  central_pos['y'];
-		//var nextPos = {'x': nextX, 'y': nextY};
-		//return nextPos;
+		//var relX = cur_pos['x'] - central_pos['x'];
+    	//var relY = cur_pos['y'] - central_pos['y'];    
+		//var x2, y2;
+    	//if (is_reverse === 0) { 
+    	//    var x2 = -relY + central_pos['x'];                     
+    	//    var y2 = relX  + central_pos['y'];                     
+		//}
+    	//else {
+    	//    x2 = relY + central_pos['x'];
+    	//    y2 = -relX + central_pos['y'];
+		//}
+    	//return {'x': x2, 'y': y2};
 	};
 
 	MovingShapeModel.prototype.is_shape_vertical = function() {
 		var x = this.moving_tiles[0]['x'];
-		for(var pos_idx = 1; pos_idx < this.moving_tiles.length ; pos_idx++) {
-			var x1 = this.moving_tiles[pos_idx]['x'];
-			x = x^x1;
+		var x1 = this.moving_tiles[1]['x'];
+		return x == x1 ? 1 : 0;
+	};
+
+	MovingShapeModel.prototype.chooseLineShapeRotateTile = function(central_tile, tile_bits) {
+		/* First, check the left position of the second tile 
+		 * if there already has a tile, or the line shape is already on the 
+		 * left edge, then try to use the first
+		 * tile as the rotation point, rotate shape as unclockwise  
+		 */
+		var pos = { 'x': central_tile.x - 1, 'y': central_tile.y };
+		var left_hastile = this.is_tile(pos, tile_bits) || central_tile.x - 1 < 0;
+		if (left_hastile) {
+			/* try to use the first tile as the rotation point, check
+			 * whether next three positions on the right has a tile, 
+			 * if not, return tile.
+			 */	
+			var first_tile_pos = {'x': central_tile.x, 'y': central_tile.y - 1};	
+			var hastile_of_three = false;
+			for (var idx=1; idx < 4; idx++) {
+				var cur_pos = {'x': first_tile_pos.x + idx, 'y': first_tile_pos.y };	
+				if ( cur_pos.x > this.width - 1) {
+					return {'can_rotate': false, 'pos': undefined};	
+				}
+				hastile_of_three = this.is_tile(cur_pos, tile_bits);	
+				if (hastile_of_three) {
+					return {'can_rotate': false, 'pos': undefined};	
+				}
+			}
+			return {'can_rotate': true, 'pos': first_tile_pos};	
+		} else {
+			var sec_tile_pos = {'x': central_tile.x, 'y': central_tile.y};				
+			var hastile_of_two = false;
+			for (var idx=1; idx < 3; idx++) {
+				var cur_pos = {'x': sec_tile_pos.x + idx, 'y': sec_tile_pos.y };	
+				if ( cur_pos.x > this.width - 1) {
+					return {'can_rotate': false, 'pos': undefined};	
+				}
+				hastile_of_two = this.is_tile(cur_pos, tile_bits);	
+				if (hastile_of_two) {
+					return {'can_rotate': false, 'pos': undefined};	
+				}
+			}
+			return {'can_rotate': true, 'pos': sec_tile_pos};	
 		}
-		return x ? 0 : 1;
+	};
+	
+	
+	MovingShapeModel.prototype.get_second_tile_of_line_shape = function(is_vertical=0) {
+		/* get the second tile , this if for line shape, and the 
+		 * squence is from top to bottom 
+		 */ 		
+		function find_second_tile(moving_tiles, is_vertical) {
+			var array = [];
+			for (var idx=0; idx < moving_tiles.length ; idx++) {
+				if (is_vertical) {
+					array.push(moving_tiles[idx].y);
+				}else {
+					array.push(moving_tiles[idx].x);
+				}
+			}
+			var sec_min = Math.min.apply(null, array) + 1;
+			for (var idx=0; idx < moving_tiles.length ; idx++) {
+				if (is_vertical) {
+					if (moving_tiles[idx].y === sec_min) {
+						return moving_tiles[idx];
+					}
+				} else {
+					if (moving_tiles[idx].x === sec_min) {
+						return moving_tiles[idx];
+					}
+				}
+			}
+		}
+
+		return find_second_tile(this.moving_tiles,is_vertical);
 	};
 
-	MovingShapeModel.prototype.is_on_the_edge = function(central_tile) {
-		/* if the shape is on the left edge, return -1
-		 * if the shape is on the right edge, return 1; 
-		 * if not both, return 0; var y = this.moving_tiles[0]['y'];	
-		 */
-		if (central_tile.x == 0) return -1;
-		else if (central_tile.x == this.width - 1) return 1;
-		else return 0;
+	/* is the posiont has a tile */
+	MovingShapeModel.prototype.is_tile = function(pos, tile_bits) {
+		var x = pos.x;	
+		var y = pos.y;
+		return ( tile_bits[y] >> x ) & 1;
 	};
 
-	MovingShapeModel.prototype.chooseCentralPoint = function(central_tile) {
+	MovingShapeModel.prototype.chooseCentralPoint = function(tile_bits) {
 		/* help to change the rotation's central point, and the direction 
-		 * of rotation, when the chg flag is 1, means need change the 
-		 * central point.
+		 * of rotation, 		 
 		 */
-		var centralPos = {'x': central_tile.x, 'y': central_tile.y};
 		var newCentralPos;
 		if (this.shapetype == 0) {
-			/* when the shape is a line, the shape beacome vertical and 
+			/* when the shape is a line, the shape is vertical and 
 			 * reach the left or rigth edge, need to change the central point 
 			 * of rotation.
 		 	 */
 			if(this.is_shape_vertical()) {
-				var ret = this.is_on_the_edge(central_tile);
-				if (ret == -1) { /*left edge*/
-					newCentralPos = {'x': central_tile.x, 'y': central_tile.y-1};
-					var reverse = 0;	
-					return {'pos': newCentralPos, 'chg': 1};
-				}else if(ret == 1) { /*right edge*/
-					newCentralPos = {'x': central_tile.x, 'y': central_tile.y-1};
-					return {'pos': newCentralPos, 'chg': 1};
+				var sec_tile = this.get_second_tile_of_line_shape(1);
+				var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
+				var ret = this.chooseLineShapeRotateTile(sec_tile, tile_bits);
+				if(ret['can_rotate']) {
+					return {'pos': ret['pos'], 'is_reverse':1};
 				}
+			}else {
+				var sec_tile = this.get_second_tile_of_line_shape(0);
+				var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
+				return {'pos': sec_pos, 'is_reverse':0};
 			}
 		}
-		return {'pos': centralPos, 'chg': 0};
+		return {'pos': undefined};
 	};
 
-
-	MovingShapeModel.prototype.rotateShape = function() {
+	MovingShapeModel.prototype.rotateShape = function(tile_bits) {
 		/* alway rotate base on the second tile in moving_tiles[1]  */
 		var central_tile = this.moving_tiles[1];
 		var pos_change_list = [];
-		var ret = this.chooseCentralPoint(central_tile);
-		for(var pos_idx = 0; pos_idx < 4; pos_idx++) {
-			var curPos = {'x': this.moving_tiles[pos_idx]['x'], 'y': this.moving_tiles[pos_idx]['y'] } ;
-			var centralPos = ret['pos'];
-			var chg = ret['chg'];
-			var nextPos = this.getRotateNextPosition(centralPos, curPos, 1);
-			var next_relative_x = nextPos['x'] - centralPos['x'];
-			var next_relative_y = nextPos['y'] - centralPos['y'];
-			/* for the line shape, must keep central point
-			 * in second point from left to right when it's horizontal 
-			 * and second point from top to bottom when it's vertical
-			 */
-			//if (next_relative_x == -2 && chg == 0) {
-			//	nextPos['x'] = nextPos['x'] + 4;		
-			//	next_relative_x = 2;
-			//}
-			//if (next_relative_y == -2 && chg == 0) {
-			//	nextPos['y'] = nextPos['y'] + 4;	
-			//	next_relative_y = 2;
-			//}
-			var position_change = {'obj': this.moving_tiles[pos_idx], 'pos': nextPos};
-			pos_change_list.push(position_change);
+		var ret = this.chooseCentralPoint(tile_bits);
+		if (ret['pos'] === undefined) {
+			return [];
+		}else {
+			for(var pos_idx = 0; pos_idx < 4; pos_idx++) {
+				var curPos = {'x': this.moving_tiles[pos_idx]['x'], 'y': this.moving_tiles[pos_idx]['y'] };
+				var centralPos = ret['pos'];
+				var nextPos = this.getRotateNextPosition(centralPos, curPos, ret['is_reverse']);
+				var position_change = {'obj': this.moving_tiles[pos_idx], 'pos': nextPos};
+				pos_change_list.push(position_change);
+			}
+			return pos_change_list;
 		}
-		return pos_change_list;
 	};
 
 	MovingShapeModel.prototype.moveShape = function(){};
@@ -226,6 +285,13 @@ angular.module('Grid', [])
 	this.set_grid_height_width = function(height, width) {
 		this.height = height ? height : 15;	
 		this.width = width ? width : 10;
+
+		/* when the position has a tile, set this bit as 1 
+		 * this array include intergers */
+		this.tile_bits = new Array(this.width);
+		for (var idx = 0; idx < this.height; idx++) {
+			this.tile_bits[idx] = 0;	
+		}
 	};
 
 	this.$get = function(TileModel, MovingShapeModel) {
@@ -234,6 +300,7 @@ angular.module('Grid', [])
 		this.grid = [];
 		/* the moving grid tiles */
 		this.tiles = [];
+		
 
 		this.get_grid_height_width = function() {
 			return {
@@ -249,6 +316,27 @@ angular.module('Grid', [])
 			}
 		};
 
+		/* set the bit as 1, when there is a tile on this position */
+		this.set_bit = function(tile, pos) {
+			var x = pos['x'];	
+			var y = pos['y'];
+		    this.tile_bits[y] =	this.tile_bits[y] | 1 << x;
+		};	
+
+		/* set the bit as 0, when there is no tile on it */
+		this.del_bit = function(tile) {
+			var x = tile.x;	
+			var y = tile.y;
+		    this.tile_bits[y] =	this.tile_bits[y] & ~(1 << x);
+		};
+
+		/* is the posiont has a tile */
+		this.is_tile = function(pos) {
+			var x = pos.x;	
+			var y = pos.y;
+			return ( this.tile_bits[y] >> x ) & 1;
+		};
+
 		/* build random mobile tiles */
 		this.buildMobileTiles = function() {
 			this.movingShape.moving_tiles = [];
@@ -261,18 +349,9 @@ angular.module('Grid', [])
 			}
 		};
 
-		this.rotateAvailable = function(direction) {
-		}
 
 		/* check whether the moving shape can move to one direction */
 		this.movesAvailable = function(direction){
-			/*  position_dict['x-y'] set as 1, means this position has a tile already. */
-			var position_dict = [];
-			for(var tile_idx = 0; tile_idx < this.tiles.length; 
-				tile_idx++) {
-				var position_str = this.tiles[tile_idx].x + '-' + this.tiles[tile_idx].y;
-				position_dict[position_str] = 1;
-			}
 			var moving_tiles = this.movingShape.moving_tiles;
 			var moving_tiles_poslist = [];
 			for (var moving_idx = 0; moving_idx < moving_tiles.length; 
@@ -282,7 +361,10 @@ angular.module('Grid', [])
 			}
 			var pos_change_list = [];
 			if (direction == 'up') {
-				pos_change_list = this.movingShape.rotateShape();
+				pos_change_list = this.movingShape.rotateShape(this.tile_bits);
+				if (pos_change_list.length === 0) {
+						return {'can_move': false, 'change_list': [] };	
+				}
 				for (var moving_idx = 0; moving_idx < pos_change_list.length; 
 				moving_idx++) {
 					var single_moving_shape = pos_change_list[moving_idx];
@@ -291,9 +373,8 @@ angular.module('Grid', [])
 						position.x < 0 || position.x > this.width - 1 ) {
 						return {'can_move': false, 'change_list': [] };	
 					}
-					var next_tile_position = position.x + '-' + position.y;
-					if (position_dict[next_tile_position] !== undefined 
-							&& moving_tiles_poslist.indexOf(next_tile_position) < 0) {
+					var position_str = position.x + '-' + position.y;
+					if (this.is_tile(position) && moving_tiles_poslist.indexOf(position_str) < 0) {
 						return {'can_move': false, 'change_list': [] };	
 					}
 				}
@@ -305,11 +386,10 @@ angular.module('Grid', [])
 					var position = this.getTileNextPosition(single_moving_shape, direction);
 					if (position.y > this.height - 1 || 
 						position.x < 0 || position.x > this.width - 1 ) {
-						return false, [];	
+						return {'can_move': false, 'change_list': [] };	
 					}
 					var next_tile_position = position.x + '-' + position.y;
-					if (position_dict[next_tile_position] !== undefined 
-							&& moving_tiles_poslist.indexOf(next_tile_position) < 0 ) {
+					if (this.is_tile(position) && moving_tiles_poslist.indexOf(next_tile_position) < 0 ) {
 						return {'can_move': false, 'change_list': [] };	
 					}
 					var position_change = {'obj': single_moving_shape, 'pos': position};
@@ -320,8 +400,19 @@ angular.module('Grid', [])
 		};
 
 		this.moveTile = function(tile, newPosition){
+			this.del_bit(tile);
 			tile.x = newPosition.x;
 			tile.y = newPosition.y;
+		};
+
+		this.setShapeBits = function(pos_change_list) {
+			/* set the new moving shapes' tile bits*/
+			for(var chg_idx = 0; chg_idx < pos_change_list.length; chg_idx++) {
+				var pos_change = pos_change_list[chg_idx];
+				var newPos = pos_change['pos']; 
+				var tile = pos_change['obj'];
+				this.set_bit(tile, newPos);
+			}
 		}
 
 		this.addPositionChange = function(position_change_list) {

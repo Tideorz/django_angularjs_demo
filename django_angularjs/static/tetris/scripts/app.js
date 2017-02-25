@@ -32,6 +32,7 @@ function($scope, GameManagerService, KeyboardService, GridService) {
 				var newPos = pos_change['pos']; 
 				GridService.moveTile(tile, newPos);		
 			}
+			GridService.setShapeBits(pos_change_list);		
 		}
 	});
 }]);
