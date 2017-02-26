@@ -147,45 +147,25 @@ angular.module('Grid', [])
 	};
 
 	MovingShapeModel.prototype.chooseLineShapeRotateTile = function(central_tile, tile_bits) {
-		/* First, check the left position of the second tile 
-		 * if there already has a tile, or the line shape is already on the 
-		 * left edge, then try to use the first
-		 * tile as the rotation point, rotate shape as unclockwise  
-		 */
 		var pos = { 'x': central_tile.x - 1, 'y': central_tile.y };
 		var left_hastile = this.is_tile(pos, tile_bits) || central_tile.x - 1 < 0;
 		if (left_hastile) {
-			/* try to use the first tile as the rotation point, check
-			 * whether next three positions on the right has a tile, 
-			 * if not, return tile.
-			 */	
-			var first_tile_pos = {'x': central_tile.x, 'y': central_tile.y - 1};	
-			var hastile_of_three = false;
-			for (var idx=1; idx < 4; idx++) {
-				var cur_pos = {'x': first_tile_pos.x + idx, 'y': first_tile_pos.y };	
-				if ( cur_pos.x > this.width - 1) {
-					return {'can_rotate': false, 'pos': undefined};	
-				}
-				hastile_of_three = this.is_tile(cur_pos, tile_bits);	
-				if (hastile_of_three) {
-					return {'can_rotate': false, 'pos': undefined};	
-				}
-			}
-			return {'can_rotate': true, 'pos': first_tile_pos};	
+			var third_tile_pos = {'x': central_tile.x + 1, 'y': central_tile.y + 1};	
+			return {'can_rotate': true, 'pos': third_tile_pos, 'is_reverse': false};	
 		} else {
 			var sec_tile_pos = {'x': central_tile.x, 'y': central_tile.y};				
 			var hastile_of_two = false;
 			for (var idx=1; idx < 3; idx++) {
 				var cur_pos = {'x': sec_tile_pos.x + idx, 'y': sec_tile_pos.y };	
 				if ( cur_pos.x > this.width - 1) {
-					return {'can_rotate': false, 'pos': undefined};	
+					return {'can_rotate': false, 'pos': undefined, 'is_reverse': true};	
 				}
 				hastile_of_two = this.is_tile(cur_pos, tile_bits);	
 				if (hastile_of_two) {
-					return {'can_rotate': false, 'pos': undefined};	
+					return {'can_rotate': false, 'pos': undefined, 'is_reverse': true};	
 				}
 			}
-			return {'can_rotate': true, 'pos': sec_tile_pos};	
+			return {'can_rotate': true, 'pos': sec_tile_pos, 'is_reverse': true};	
 		}
 	};
 	
@@ -242,7 +222,7 @@ angular.module('Grid', [])
 				var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
 				var ret = this.chooseLineShapeRotateTile(sec_tile, tile_bits);
 				if(ret['can_rotate']) {
-					return {'pos': ret['pos'], 'is_reverse':1};
+					return {'pos': ret['pos'], 'is_reverse': ret['is_reverse']};
 				}
 			}else {
 				var sec_tile = this.get_second_tile_of_line_shape(0);
@@ -300,6 +280,8 @@ angular.module('Grid', [])
 		this.grid = [];
 		/* the moving grid tiles */
 		this.tiles = [];
+		/* the first time of moving shape reach the grid bottom */
+		this.first_down = false;
 		
 
 		this.get_grid_height_width = function() {
@@ -339,6 +321,7 @@ angular.module('Grid', [])
 
 		/* build random mobile tiles */
 		this.buildMobileTiles = function() {
+			this.first_down = false;
 			this.movingShape.moving_tiles = [];
 			this.movingShape.randomShape();
 			var moving_tiles = this.movingShape.moving_tiles;
@@ -453,8 +436,28 @@ angular.module('Grid', [])
 		};
 
 		this.calculateScore = function() {
-			/* delete line */	
+			var line_max_number = Math.pow(2, this.width) - 1;
+			var deleted_lines = 0;
+			for (var idx = 0; idx < this.height; idx++) {
+				if(this.tile_bits[idx] == line_max_number) {
+					deleted_lines++;
+					this.tile_bits[idx] = 0;
+				}
+			}
+			this.draw_new_tiles();
+		};
 
+		this.draw_new_tiles = function() {
+			this.tiles.length = 0;
+			for (var y = 0; y < this.height; y++) {
+				for (var x = 0; x < this.width; x++) {
+					var pos = {'x': x, 'y': y};
+					if(this.is_tile(pos)){
+						var tile_obj = new TileModel(pos);
+						this.tiles.push(tile_obj);
+					}
+				}
+			}
 		};
 
 		this.moveShape = function(direction) {
@@ -463,6 +466,15 @@ angular.module('Grid', [])
 			var result = this.movesAvailable(direction);	
 			if (direction == 'down') {
 				if(!result['can_move']) {
+					if (!this.first_down) { 
+						/* If the moving shape is the first 
+						 * time to reach the bottom, he still 
+						 * have one chance to moving the shape
+						 * left or right.
+						 */
+						this.first_down = true;	
+						return;
+					} 
 					this.calculateScore();
 					this.buildMobileTiles();
 				}	
