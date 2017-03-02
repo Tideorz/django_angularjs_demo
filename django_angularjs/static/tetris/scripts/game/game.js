@@ -29,7 +29,7 @@ angular.module('Game', ['Grid'])
 	this.gridWidth = this.gridSize.width;
 
 	/* default moving tiles down interval */
-	this.down_interval = 1000;
+	this.down_interval = 300;
 
 	this.moveShapeDown = function(){
 		var moving_tiles_down = function() {

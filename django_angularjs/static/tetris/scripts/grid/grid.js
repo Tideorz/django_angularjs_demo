@@ -60,7 +60,7 @@ angular.module('Grid', [])
 		var midX = parseInt((gridWidth-1)/2);
 		var originPos = {'x': midX, 'y': -1}
 		var initPosList = [];
-		var rand_idx = 0; //Math.floor(Math.random() * 4);
+		var rand_idx = 1;// Math.floor(Math.random() * 4);
 		rand_idx = rand_idx.toString();
 		var relPosArray = {
 			'0': /* line shape */
@@ -126,18 +126,6 @@ angular.module('Grid', [])
 		}
 		return {'x': x2, 'y': y2} 
 
-		//var relX = cur_pos['x'] - central_pos['x'];
-    	//var relY = cur_pos['y'] - central_pos['y'];    
-		//var x2, y2;
-    	//if (is_reverse === 0) { 
-    	//    var x2 = -relY + central_pos['x'];                     
-    	//    var y2 = relX  + central_pos['y'];                     
-		//}
-    	//else {
-    	//    x2 = relY + central_pos['x'];
-    	//    y2 = -relX + central_pos['y'];
-		//}
-    	//return {'x': x2, 'y': y2};
 	};
 
 	MovingShapeModel.prototype.is_shape_vertical = function() {
@@ -170,11 +158,11 @@ angular.module('Grid', [])
 	};
 	
 	
-	MovingShapeModel.prototype.get_second_tile_of_line_shape = function(is_vertical=0) {
+	MovingShapeModel.prototype.get_second_tile_of_shape = function(is_vertical=0) {
 		/* get the second tile , this if for line shape, and the 
 		 * squence is from top to bottom 
 		 */ 		
-		function find_second_tile(moving_tiles, is_vertical) {
+		function find_line_second_tile(moving_tiles, is_vertical) {
 			var array = [];
 			for (var idx=0; idx < moving_tiles.length ; idx++) {
 				if (is_vertical) {
@@ -197,7 +185,40 @@ angular.module('Grid', [])
 			}
 		}
 
-		return find_second_tile(this.moving_tiles,is_vertical);
+		function find_z_second_tile(moving_tiles) {
+			var yarray = [];
+			var xarray = [];
+			var is_reverse = false;
+			for (var idx=0; idx < moving_tiles.length ; idx++) {
+				yarray.push(moving_tiles[idx].y);
+				xarray.push(moving_tiles[idx].x);
+			}
+			yarray.sort();
+			xarray.sort();
+			if(yarray[0] != yarray[1]) {
+				is_reverse = true;	
+				for (var idx=0; idx < moving_tiles.length ; idx++) {
+					if(moving_tiles[idx].y == yarray[1] && 
+						moving_tiles[idx].x == xarray[3]) {
+						return {'tile': moving_tiles[idx], 'is_reverse': is_reverse};
+					}
+				}
+			}else{
+				for (var idx=0; idx < moving_tiles.length ; idx++) {
+					if(moving_tiles[idx].y == yarray[1] && 
+						moving_tiles[idx].x == xarray[2]) {
+						return {'tile': moving_tiles[idx], 'is_reverse': is_reverse};
+					}
+				}
+			
+			}
+		}
+
+		if(this.shapetype == 0) {
+			return find_line_second_tile(this.moving_tiles,is_vertical);
+		}else if(this.shapetype==1) {
+			return find_z_second_tile(this.moving_tiles);	
+		}
 	};
 
 	/* is the posiont has a tile */
@@ -218,17 +239,22 @@ angular.module('Grid', [])
 			 * of rotation.
 		 	 */
 			if(this.is_shape_vertical()) {
-				var sec_tile = this.get_second_tile_of_line_shape(1);
+				var sec_tile = this.get_second_tile_of_shape(1);
 				var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
 				var ret = this.chooseLineShapeRotateTile(sec_tile, tile_bits);
 				if(ret['can_rotate']) {
 					return {'pos': ret['pos'], 'is_reverse': ret['is_reverse']};
 				}
 			}else {
-				var sec_tile = this.get_second_tile_of_line_shape(0);
+				var sec_tile = this.get_second_tile_of_shape(0);
 				var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
 				return {'pos': sec_pos, 'is_reverse':0};
 			}
+		}else if(this.shapetype == 1) {
+			var ret = this.get_second_tile_of_shape();
+			var sec_tile = ret['tile'];
+			var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
+			return {'pos': sec_pos, 'is_reverse':ret['is_reverse']};
 		}
 		return {'pos': undefined};
 	};
@@ -444,11 +470,29 @@ angular.module('Grid', [])
 					this.tile_bits[idx] = 0;
 				}
 			}
-			this.draw_new_tiles();
+			if(deleted_lines > 0) {
+				this.draw_new_tiles();
+			}
 		};
 
 		this.draw_new_tiles = function() {
+			/* clear the old tiles */
 			this.tiles.length = 0;
+			/* put the non-empty lines down */
+			for(var y_upper=this.height-2; y_upper >= 0; y_upper--) {
+				var go_down_rows = 0;
+				if (this.tile_bits[y_upper] === 0) continue;
+				else {
+					for(var y=y_upper+1; y <= this.height-1; y++) {
+						if(this.tile_bits[y] === 0) {
+							go_down_rows++;
+						}else break;
+
+					}
+					this.tile_bits[y_upper + go_down_rows] = this.tile_bits[y_upper];
+					this.tile_bits[y_upper] = 0;
+				}
+			}
 			for (var y = 0; y < this.height; y++) {
 				for (var x = 0; x < this.width; x++) {
 					var pos = {'x': x, 'y': y};
@@ -458,6 +502,7 @@ angular.module('Grid', [])
 					}
 				}
 			}
+
 		};
 
 		this.moveShape = function(direction) {
