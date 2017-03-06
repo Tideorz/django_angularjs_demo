@@ -60,7 +60,7 @@ angular.module('Grid', [])
 		var midX = parseInt((gridWidth-1)/2);
 		var originPos = {'x': midX, 'y': -1}
 		var initPosList = [];
-		var rand_idx = 1;// Math.floor(Math.random() * 4);
+		var rand_idx = 4;// Math.floor(Math.random() * 4);
 		rand_idx = rand_idx.toString();
 		var relPosArray = {
 			'0': /* line shape */
@@ -82,6 +82,16 @@ angular.module('Grid', [])
 			[
 				{'x': -1, 'y':0}, {'x':0, 'y': 0},
 				{'x': -1, 'y':-1 },{'x':1, 'y': 0}
+			],
+			'4': /* T shape */
+			[
+				{'x':-1, 'y':0}, {'x':0, 'y': 0},
+				{'x': 0, 'y':-1 },{'x':1, 'y': 0}
+			],
+			'5': /* reverse Z shape */
+			[
+				{'x':-1, 'y':0}, {'x':0, 'y': 0},
+				{'x': 0, 'y':-1 },{'x':1, 'y': 0}
 			],
 		};
 		this.relPosList = relPosArray[rand_idx];
@@ -214,10 +224,30 @@ angular.module('Grid', [])
 			}
 		}
 
+		function find_t_second_tile(moving_tiles) {
+			var yarray = [];
+			var xarray = [];
+			var is_reverse = false;
+			for (var idx=0; idx < moving_tiles.length ; idx++) {
+				yarray.push(moving_tiles[idx].y);
+				xarray.push(moving_tiles[idx].x);
+			}
+			yarray.sort();
+			xarray.sort();
+			for (var idx=0; idx < moving_tiles.length ; idx++) {
+				if(moving_tiles[idx].y == yarray[2] && 
+					moving_tiles[idx].x == xarray[2]) {
+					return {'tile': moving_tiles[idx], 'is_reverse': is_reverse};
+				}
+			}
+		}
+
 		if(this.shapetype == 0) {
 			return find_line_second_tile(this.moving_tiles,is_vertical);
-		}else if(this.shapetype==1) {
+		}else if(this.shapetype == 1) {
 			return find_z_second_tile(this.moving_tiles);	
+		}else if(this.shapetype == 4) {
+			return find_t_second_tile(this.moving_tiles);
 		}
 	};
 
@@ -251,6 +281,11 @@ angular.module('Grid', [])
 				return {'pos': sec_pos, 'is_reverse':0};
 			}
 		}else if(this.shapetype == 1) {
+			var ret = this.get_second_tile_of_shape();
+			var sec_tile = ret['tile'];
+			var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
+			return {'pos': sec_pos, 'is_reverse':ret['is_reverse']};
+		}else if(this.shapetype == 4) {
 			var ret = this.get_second_tile_of_shape();
 			var sec_tile = ret['tile'];
 			var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
