@@ -60,7 +60,7 @@ angular.module('Grid', [])
 		var midX = parseInt((gridWidth-1)/2);
 		var originPos = {'x': midX, 'y': -1}
 		var initPosList = [];
-		var rand_idx = 4;// Math.floor(Math.random() * 4);
+		var rand_idx =  Math.floor(Math.random() * 4);
 		rand_idx = rand_idx.toString();
 		var relPosArray = {
 			'0': /* line shape */
@@ -499,34 +499,40 @@ angular.module('Grid', [])
 		this.calculateScore = function() {
 			var line_max_number = Math.pow(2, this.width) - 1;
 			var deleted_lines = 0;
+			var deleted_idx = new Array();
 			for (var idx = 0; idx < this.height; idx++) {
 				if(this.tile_bits[idx] == line_max_number) {
 					deleted_lines++;
 					this.tile_bits[idx] = 0;
+					deleted_idx.push(idx);
 				}
 			}
 			if(deleted_lines > 0) {
-				this.draw_new_tiles();
+				this.draw_new_tiles(deleted_idx);
 			}
 		};
 
-		this.draw_new_tiles = function() {
+		this.draw_new_tiles = function(deleted_idx) {
 			/* clear the old tiles */
 			this.tiles.length = 0;
 			/* put the non-empty lines down */
-			for(var y_upper=this.height-2; y_upper >= 0; y_upper--) {
-				var go_down_rows = 0;
-				if (this.tile_bits[y_upper] === 0) continue;
-				else {
-					for(var y=y_upper+1; y <= this.height-1; y++) {
-						if(this.tile_bits[y] === 0) {
-							go_down_rows++;
-						}else break;
-
-					}
-					this.tile_bits[y_upper + go_down_rows] = this.tile_bits[y_upper];
-					this.tile_bits[y_upper] = 0;
+			var goes_down_array = new Array(this.height);
+			for (var idx=0; idx < this.height; idx++) {
+				goes_down_array[idx] = 0;		
+			}
+			for(var idx=this.height-1; idx >=0; idx--) {
+				if(this.tile_bits[idx] == 0 && deleted_idx.indexOf(idx) != -1) {
+					for(var y=idx-1; y>=0; y--){
+						goes_down_array[y]++;	
+					}	
 				}
+			}
+			for(var idx=this.height-2; idx >= 0; idx--) {
+				if(goes_down_array[idx] == 0){ 
+					continue;
+				}
+				this.tile_bits[goes_down_array[idx]+idx] = this.tile_bits[idx];				
+				this.tile_bits[idx] = 0;
 			}
 			for (var y = 0; y < this.height; y++) {
 				for (var x = 0; x < this.width; x++) {
