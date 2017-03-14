@@ -55,12 +55,25 @@ angular.module('Grid', [])
 		this.height = height;
 	}
 
+
+	MovingShapeModel.prototype.rand = function(number){
+		var today = new Date(); 
+		var seed = today.getTime();
+		function rnd(){
+			seed = ( seed * 9301 + 49297 ) % 233280;
+		    return seed / ( 233280.0 );
+		};
+		return Math.ceil(rnd(seed) * number);
+	};
+
 	/* Set the init Moving Shape initial position randomly */
 	MovingShapeModel.prototype.initPos = function(gridWidth){
 		var midX = parseInt((gridWidth-1)/2);
 		var originPos = {'x': midX, 'y': -1}
 		var initPosList = [];
-		var rand_idx =  Math.floor(Math.random() * 4);
+		var d = new Date().getTime();
+		var rand_idx = this.rand(7)-1;
+		console.log('shapetype =', rand_idx)
 		rand_idx = rand_idx.toString();
 		var relPosArray = {
 			'0': /* line shape */
@@ -76,7 +89,7 @@ angular.module('Grid', [])
 			'2': /* square shape */
 			[
 				{'x': 0, 'y':-1}, {'x':0, 'y': 0},
-				{'x': -1, 'y':-1 },{'x':1, 'y': 0}
+				{'x': -1, 'y':-1 },{'x':-1, 'y': 0}
 			] ,
 			'3': /* L shape */
 			[
@@ -90,8 +103,13 @@ angular.module('Grid', [])
 			],
 			'5': /* reverse Z shape */
 			[
+				{'x':1, 'y':0}, {'x':0, 'y': 0},
+				{'x': 0, 'y':1 },{'x':-1, 'y': 1}
+			],
+			'6': /* reverse L shape */
+			[
 				{'x':-1, 'y':0}, {'x':0, 'y': 0},
-				{'x': 0, 'y':-1 },{'x':1, 'y': 0}
+				{'x': 1, 'y':-1 },{'x':1, 'y': 0}
 			],
 		};
 		this.relPosList = relPosArray[rand_idx];
@@ -195,6 +213,7 @@ angular.module('Grid', [])
 			}
 		}
 
+
 		function find_z_second_tile(moving_tiles) {
 			var yarray = [];
 			var xarray = [];
@@ -203,8 +222,11 @@ angular.module('Grid', [])
 				yarray.push(moving_tiles[idx].y);
 				xarray.push(moving_tiles[idx].x);
 			}
-			yarray.sort();
-			xarray.sort();
+			function swap(v1, v2) {
+				return v1 - v2;	
+			};
+			yarray.sort(swap);
+			xarray.sort(swap);
 			if(yarray[0] != yarray[1]) {
 				is_reverse = true;	
 				for (var idx=0; idx < moving_tiles.length ; idx++) {
@@ -224,6 +246,38 @@ angular.module('Grid', [])
 			}
 		}
 
+		function find_reverse_z_second_tile(moving_tiles) {
+			var yarray = [];
+			var xarray = [];
+			var is_reverse = false;
+			for (var idx=0; idx < moving_tiles.length ; idx++) {
+				yarray.push(moving_tiles[idx].y);
+				xarray.push(moving_tiles[idx].x);
+			}
+			function swap(v1, v2) {
+				return v1 - v2;	
+			};
+			yarray.sort(swap);
+			xarray.sort(swap);
+			if(yarray[0] != yarray[1]) {
+				for (var idx=0; idx < moving_tiles.length ; idx++) {
+					if(moving_tiles[idx].y == yarray[1] && 
+						moving_tiles[idx].x == xarray[1]) {
+						return {'tile': moving_tiles[idx], 'is_reverse': is_reverse};
+					}
+				}
+			}else{
+				is_reverse = true;	
+				for (var idx=0; idx < moving_tiles.length ; idx++) {
+					if(moving_tiles[idx].y == yarray[1] && 
+						moving_tiles[idx].x == xarray[2]) {
+						return {'tile': moving_tiles[idx], 'is_reverse': is_reverse};
+					}
+				}
+			
+			}
+		}
+
 		function find_t_second_tile(moving_tiles) {
 			var yarray = [];
 			var xarray = [];
@@ -232,8 +286,11 @@ angular.module('Grid', [])
 				yarray.push(moving_tiles[idx].y);
 				xarray.push(moving_tiles[idx].x);
 			}
-			yarray.sort();
-			xarray.sort();
+			function swap(v1, v2) {
+				return v1 - v2;	
+			};
+			yarray.sort(swap);
+			xarray.sort(swap);
 			for (var idx=0; idx < moving_tiles.length ; idx++) {
 				if(moving_tiles[idx].y == yarray[2] && 
 					moving_tiles[idx].x == xarray[2]) {
@@ -242,12 +299,72 @@ angular.module('Grid', [])
 			}
 		}
 
+		function find_l_second_tile(moving_tiles, reverse_l=false) {
+			var yarray = [];		
+			var xarray = [];
+			var is_reverse = false;
+			for (var idx=0; idx < moving_tiles.length ; idx++) {
+				yarray.push(moving_tiles[idx].y);
+				xarray.push(moving_tiles[idx].x);
+			}
+
+			function swap(v1, v2) {
+				return v1 - v2;	
+			};
+			
+			yarray.sort(swap);
+			xarray.sort(swap);
+			var x_value = 0;
+			var y_value = 0;
+			if (xarray[0] == xarray[1] && xarray[1] == xarray[2]) {
+				x_value  = xarray[0];
+				if (reverse_l){
+					y_value = yarray[1];
+				}else {
+					y_value = yarray[2];
+				}
+			}else if (xarray[1] == xarray[2] && xarray[2] == xarray[3]){
+				x_value  = xarray[1];
+				if (reverse_l) {
+					y_value = yarray[2];
+				}else {
+					y_value = yarray[1];
+				}
+			}else if (yarray[0] == yarray[1] && yarray[1] == yarray[2]){
+				if (reverse_l) {
+					x_value  = xarray[2];
+				}else {
+					x_value  = xarray[1];
+				}
+				y_value = yarray[0];
+			}else {
+				if (reverse_l) {
+					x_value  = xarray[1];
+				}else {
+					x_value  = xarray[2];
+				}
+				y_value = yarray[1];
+			}
+			for (var idx=0; idx < moving_tiles.length ; idx++) {
+				if(moving_tiles[idx].y == y_value && 
+						moving_tiles[idx].x == x_value) {
+						return {'tile': moving_tiles[idx], 'is_reverse': is_reverse};
+					}
+			}
+			
+		}
+
 		if(this.shapetype == 0) {
 			return find_line_second_tile(this.moving_tiles,is_vertical);
 		}else if(this.shapetype == 1) {
 			return find_z_second_tile(this.moving_tiles);	
+		}else if(this.shapetype == 3 || this.shapetype == 6) {
+			var reverse_l = (this.shapetype == 3) ? 0 : 1;
+			return find_l_second_tile(this.moving_tiles, reverse_l);	
 		}else if(this.shapetype == 4) {
 			return find_t_second_tile(this.moving_tiles);
+		}else if(this.shapetype == 5) {
+			return find_reverse_z_second_tile(this.moving_tiles);
 		}
 	};
 
@@ -285,7 +402,17 @@ angular.module('Grid', [])
 			var sec_tile = ret['tile'];
 			var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
 			return {'pos': sec_pos, 'is_reverse':ret['is_reverse']};
+		}else if(this.shapetype == 3 || this.shapetype == 6) {
+			var ret = this.get_second_tile_of_shape();		
+			var sec_tile = ret['tile'];
+			var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
+			return {'pos': sec_pos, 'is_reverse':ret['is_reverse']};
 		}else if(this.shapetype == 4) {
+			var ret = this.get_second_tile_of_shape();
+			var sec_tile = ret['tile'];
+			var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
+			return {'pos': sec_pos, 'is_reverse':ret['is_reverse']};
+		}else if(this.shapetype == 5) {
 			var ret = this.get_second_tile_of_shape();
 			var sec_tile = ret['tile'];
 			var sec_pos =  { 'x': sec_tile.x, 'y': sec_tile.y };
@@ -534,16 +661,18 @@ angular.module('Grid', [])
 				this.tile_bits[goes_down_array[idx]+idx] = this.tile_bits[idx];				
 				this.tile_bits[idx] = 0;
 			}
-			for (var y = 0; y < this.height; y++) {
-				for (var x = 0; x < this.width; x++) {
-					var pos = {'x': x, 'y': y};
-					if(this.is_tile(pos)){
-						var tile_obj = new TileModel(pos);
-						this.tiles.push(tile_obj);
+			for(var idx=this.height-1; idx >= 0; idx--) {
+				if(this.tile_bits[idx] != 0) {
+					for (var x = 0; x < this.width; x++) {
+						var pos = {'x': x, 'y': idx};
+						if(this.is_tile(pos)){
+							var tile_obj = new TileModel(pos);
+							this.tiles.push(tile_obj);
+						}
+						
 					}
 				}
 			}
-
 		};
 
 		this.moveShape = function(direction) {
