@@ -17,6 +17,21 @@ angular.module('Grid', [])
 		  next: function() { return generateUid(); }
 	  };  
 })
+.factory('GameState', function() {
+	/* Game State:
+	 * game-init: hasn't started the game, only has empty grid, no moving tiles.
+	 * game-pause: pause the game.
+	 * game-over: moving tiles reach the middle top point of the grid.
+	 * moving-tiles-building: moving tiles start to build, but hasn't shows entirely on the grid.
+	 * moving-tiles-builddone: moving tiles has shown entirely on the grid.
+	 *
+		'game-init', 'game-pause', 'game-over', 'moving-tiles-building', 'moving-tiles-builddone' 
+	 */
+	function GameState() {
+		this.cur_game_state = 'game-init';	
+	};
+	return GameState;
+})
 .factory('TileModel', ['GenerateUniqueId', function(GenerateUniqueId) {
 	function TileModel(pos) {
 		this.x = pos.x;
@@ -462,7 +477,7 @@ angular.module('Grid', [])
 		}
 	};
 
-	this.$get = function(TileModel, MovingShapeModel) {
+	this.$get = function(TileModel, MovingShapeModel, GameState) {
 		this.movingShape = new MovingShapeModel(this.width, this.height);
 		/* current static grid */
 		this.grid = [];
@@ -470,7 +485,16 @@ angular.module('Grid', [])
 		this.tiles = [];
 		/* the first time of moving shape reach the grid bottom */
 		this.first_down = false;
-		
+		this.game_state_obj = {'state': 'game-init'};
+
+		this.init = function() {
+			this.movingShape = new MovingShapeModel(this.width, this.height);
+			/* the first time of moving shape reach the grid bottom */
+			this.first_down = false;
+			this.game_state_obj = {'state': 'game-init'};
+			this.tiles.length = 0;
+			this.buildEmptyGameBoard();
+		};
 
 		this.get_grid_height_width = function() {
 			return {
@@ -675,12 +699,26 @@ angular.module('Grid', [])
 			}
 		};
 
+		this.is_game_over = function() {
+			var moving_tiles = this.movingShape.moving_tiles;
+			for (var moving_idx = 0; moving_idx < moving_tiles.length; 
+				moving_idx++) {
+				if (moving_tiles[moving_idx].y	 === -1) {
+					return true;	
+				}
+			}
+			return false;
+		};
+
 		this.moveShape = function(direction) {
 			var pos_change_list;
 			var can_move = false;
 			var result = this.movesAvailable(direction);	
 			if (direction == 'down') {
 				if(!result['can_move']) {
+					if (this.is_game_over()) {
+						this.game_state_obj.state = 'game-over';
+					}
 					if (!this.first_down) { 
 						/* If the moving shape is the first 
 						 * time to reach the bottom, he still 

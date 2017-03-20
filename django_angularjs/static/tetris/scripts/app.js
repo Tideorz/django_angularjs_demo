@@ -9,9 +9,11 @@ function($scope, GameManagerService, KeyboardService, GridService) {
 	this.game = GameManagerService;
 	this.newGame = function() {
 		KeyboardService.init();
+		this.game.newGame();	
+
 		$scope.keydown_event_queue = KeyboardService.keydown_event_queue;
 		$scope.position_change_queue = GridService.movingShape.position_change_queue;
-		this.game.newGame();	
+		$scope.game_state_obj = GridService.game_state_obj;
 	};
 	this.newGame();
 	KeyboardService.monitor_keydown();
@@ -22,6 +24,12 @@ function($scope, GameManagerService, KeyboardService, GridService) {
 			GameManagerService.moveShape($scope.keydown_event_queue.shift());		
 		}
 	});
+
+	$scope.$watch('game_state_obj', function() {
+		if ($scope.game_state_obj.state == 'game-over') {
+			GameManagerService.newGame();
+		}
+	}, true);
 
 	$scope.$watchCollection('position_change_queue', function() {
 		for(var queue_idx = 0; queue_idx < $scope.position_change_queue.length; queue_idx++) {
