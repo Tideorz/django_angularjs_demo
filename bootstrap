@@ -1,4 +1,5 @@
 #!/bin/sh
+echo 'test'
 rerun="YES"
 requirements="--requirement requirements.pip"
 pip_upgrade_option=""
@@ -6,9 +7,9 @@ if [ $# -gt 0 ]; then
     while getopts "um:" optname
     do
         case $optname in
-            u)  
+            u)
                 pip_upgrade_option="--upgrade"
-                ;;  
+                ;;
         esac
     done
 fi
@@ -18,7 +19,7 @@ fi
 pip_cmd="pip install $pip_upgrade_option --extra-index-url ${PKG_SOURCE_URL} --find-links ${PKG_SOURCE_URL} $requirements"
 
 if [ ! -d "environ" ]; then
-    virtualenv --system-site-packages --no-pip environ || (echo "Exiting; virtualenv failed" && exit 1)  
+    virtualenv --system-site-packages --no-pip environ || (echo "Exiting; virtualenv failed" && exit 1)
     rerun=
 fi
 
